@@ -1,0 +1,141 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/Timeline/Editor.gd" type="Script" id=1]
+[ext_resource path="res://addons/Timeline/GraphEdit.gd" type="Script" id=2]
+[ext_resource path="res://addons/Timeline/Edits.gd" type="Script" id=3]
+
+[node name="Editor" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 1 )
+__meta__ = {
+"_editor_description_": "idea
+	have in the edit a control for each function call in the event lines
+	-> nodes are all the same
+	-? can we create the node view based on the code alone?
+		-> no editor only data
+	-< a text edit in the node would require a custom node system if we want slots in lines
+		-> make the slots still labels that are below the lineEdit
+			-> confusing
+			-> option to hide the code
+				-> all or for each node or all and overwrite
+	-Slots
+		a variable as placeholder in edit that sets the label and gets replaced in code
+	-Code
+		not changeable?
+		validate first
+			-> update edit on edit
+	-Edit
+		can we copy from dialogic?
+		- dragable elements
+		elements
+			- text
+				Text Edit
+				-convert \\n in new lines? or make them to \"\\n\"
+			"
+}
+
+[node name="Toolbar" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+margin_bottom = 40.0
+
+[node name="Add" type="Button" parent="Toolbar"]
+margin_right = 20.0
+margin_bottom = 40.0
+text = "+"
+
+[node name="Button" type="Button" parent="Toolbar"]
+margin_left = 24.0
+margin_right = 83.0
+margin_bottom = 40.0
+text = "Open..."
+
+[node name="FileDialog" type="FileDialog" parent="Toolbar/Button"]
+margin_right = 315.0
+margin_bottom = 130.0
+rect_min_size = Vector2( 256, 256 )
+window_title = "Open a File"
+mode = 0
+filters = PoolStringArray( "*.res", "*.tres" )
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 40.0
+
+[node name="TimelineEdit" type="GraphEdit" parent="HSplitContainer"]
+margin_right = 1024.0
+margin_bottom = 560.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+right_disconnects = true
+scroll_offset = Vector2( -506, 0 )
+script = ExtResource( 2 )
+
+[node name="NodeMenu" type="PopupMenu" parent="HSplitContainer/TimelineEdit"]
+margin_right = 20.0
+margin_bottom = 20.0
+items = [ "Flow", null, 0, false, false, 0, 0, null, "", false ]
+
+[node name="Edit" type="Control" parent="HSplitContainer"]
+visible = false
+margin_left = 518.0
+margin_right = 1024.0
+margin_bottom = 560.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 3 )
+
+[node name="Toolbar" type="HBoxContainer" parent="HSplitContainer/Edit"]
+anchor_right = 1.0
+margin_bottom = 40.0
+
+[node name="Add" type="Button" parent="HSplitContainer/Edit/Toolbar"]
+margin_right = 20.0
+margin_bottom = 40.0
+text = "+"
+
+[node name="Label" type="Label" parent="HSplitContainer/Edit"]
+margin_top = 45.0
+text = "Name:"
+
+[node name="NameLine" type="LineEdit" parent="HSplitContainer/Edit"]
+anchor_right = 1.0
+margin_left = 50.0
+margin_top = 40.0
+
+[node name="Scroll" type="ScrollContainer" parent="HSplitContainer/Edit"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 64.0
+
+[node name="Edits" type="VBoxContainer" parent="HSplitContainer/Edit/Scroll"]
+margin_right = 506.0
+size_flags_horizontal = 3
+
+[node name="AddMenu" type="PopupMenu" parent="HSplitContainer/Edit"]
+margin_right = 20.0
+margin_bottom = 20.0
+items = [ "Text", null, 0, false, false, 0, 0, null, "", false ]
+
+[connection signal="pressed" from="Toolbar/Add" to="." method="_on_Add_pressed"]
+[connection signal="pressed" from="Toolbar/Button" to="Toolbar/Button/FileDialog" method="popup_centered"]
+[connection signal="file_selected" from="Toolbar/Button/FileDialog" to="." method="_on_FileDialog_file_selected"]
+[connection signal="connection_from_empty" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_from_empty"]
+[connection signal="connection_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_request"]
+[connection signal="connection_to_empty" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_to_empty"]
+[connection signal="copy_nodes_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_copy_nodes_request"]
+[connection signal="delete_nodes_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_delete_nodes_request"]
+[connection signal="disconnection_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_disconnection_request"]
+[connection signal="duplicate_nodes_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_duplicate_nodes_request"]
+[connection signal="node_selected" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_node_selected"]
+[connection signal="node_unselected" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_node_unselected"]
+[connection signal="paste_nodes_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_paste_nodes_request"]
+[connection signal="popup_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_popup_request"]
+[connection signal="id_pressed" from="HSplitContainer/TimelineEdit/NodeMenu" to="HSplitContainer/TimelineEdit" method="_on_NodeMenu_id_pressed"]
+[connection signal="popup_hide" from="HSplitContainer/TimelineEdit/NodeMenu" to="HSplitContainer/TimelineEdit" method="_on_PopupMenu_popup_hide"]
+[connection signal="pressed" from="HSplitContainer/Edit/Toolbar/Add" to="HSplitContainer/Edit" method="_on_Add_pressed"]
+[connection signal="text_entered" from="HSplitContainer/Edit/NameLine" to="HSplitContainer/Edit" method="_on_NameLine_text_entered"]
+[connection signal="index_pressed" from="HSplitContainer/Edit/AddMenu" to="HSplitContainer/Edit" method="_on_AddMenu_index_pressed"]
