@@ -1,13 +1,12 @@
 tool
 extends EventEdit
-class_name TextEventEdit
 
 onready var text := $TextEdit
 var changed := false
 
 func _ready() -> void:
 	if event.lines:
-		text.text = _extract_text(event.lines[get_position_in_parent() - 1])
+		text.text = _extract_text(get_line())
 
 
 func _extract_text(line: String) -> String:
@@ -22,6 +21,6 @@ func _on_TextEdit_text_changed() -> void:
 func _on_TextEdit_focus_exited() -> void:
 	if changed:
 		var line = "text(\"%s\")" % text.text
-		event.set_line(line, get_position_in_parent())
+		set_line(line)
 		changed = false
 

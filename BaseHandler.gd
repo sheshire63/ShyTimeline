@@ -45,6 +45,10 @@ func _ready() -> void:
 	input_boxes = _load_nodes_into_dict(input_boxes_paths, Container)
 	if text_boxes:
 		active_text = text_boxes.values()[0]
+	if choice_boxes:
+		active_choice_box = choice_boxes.values()[0]
+	if input_boxes:
+		active_input_box = input_boxes.values()[0]
 	if !Engine.editor_hint:
 		queue_event(start)
 		next()

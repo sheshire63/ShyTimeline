@@ -5,7 +5,7 @@ onready var text := $TextEdit
 var changed = false
 
 func _ready() -> void:
-	text.text = event.lines[get_position_in_parent() - 1]
+	text.text = get_line()
 
 
 func _on_TextEdit_text_changed() -> void:
@@ -14,6 +14,6 @@ func _on_TextEdit_text_changed() -> void:
 
 func _on_TextEdit_focus_exited() -> void:
 	if changed:
-		event.set_line(text.text, get_position_in_parent())
+		set_line(text.text)
 		changed = false
-	
+

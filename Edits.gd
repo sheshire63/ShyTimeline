@@ -14,6 +14,9 @@ var event: Event setget _set_event; func _set_event(new):
 	if event and event.is_connected("changed", self, "setup"):
 		event.disconnect("changed", self, "setup")
 	event = new
+	if !event:
+		clear()
+		return
 	event.connect("changed", self, "setup")
 	setup()
 	visible = true
@@ -27,8 +30,10 @@ onready var name_edit := $NameLine
 var code_edit := preload("res://addons/Timeline/Edits/Code.tscn")
 
 func _ready() -> void:
+	assert(box)
 	load_types()
 	visible = false
+
 
 # public ----------------------------------------------------------------
 
@@ -39,6 +44,7 @@ func clear() -> void:
 
 
 func setup() -> void:
+	assert(box)
 	clear()
 	assert(event and timeline)
 	name_edit.text = timeline.find_event_name(event)
@@ -48,7 +54,9 @@ func setup() -> void:
 
 
 func add_element(type) -> void:
-	assert(event)
+	if !event:
+		print("No event selected")
+		return
 	event.add_line("%s()" % type.to_lower())
 	# the change in event causes a refresh
 
@@ -65,7 +73,6 @@ func add_edit(edit: EventEdit) -> void:
 
 
 func load_types() -> void:
-	menu.clear()
 	var dir = Directory.new()
 	if dir.open(folder) == OK:
 		dir.list_dir_begin(true)

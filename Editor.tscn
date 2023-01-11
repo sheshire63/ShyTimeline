@@ -34,6 +34,10 @@ __meta__ = {
 			- text
 				Text Edit
 				-convert \\n in new lines? or make them to \"\\n\"
+	-Event
+		are universal
+		-some templates
+			choice add a text for choice text
 			"
 }
 
@@ -118,7 +122,7 @@ size_flags_horizontal = 3
 [node name="AddMenu" type="PopupMenu" parent="HSplitContainer/Edit"]
 margin_right = 20.0
 margin_bottom = 20.0
-items = [ "Text", null, 0, false, false, 0, 0, null, "", false ]
+items = [ "Choice", null, 0, false, false, 0, 0, null, "", false, "Text", null, 0, false, false, 1, 0, null, "", false, "Code", null, 0, false, false, 2, 0, null, "", false ]
 
 [connection signal="pressed" from="Toolbar/Add" to="." method="_on_Add_pressed"]
 [connection signal="pressed" from="Toolbar/Button" to="Toolbar/Button/FileDialog" method="popup_centered"]
