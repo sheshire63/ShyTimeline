@@ -31,8 +31,9 @@ func wait(time := 1.0) -> void:
 	yield(get_tree().create_timer(time), "timeout")
 
 
-func text(string, flush:= true) -> void:
+func text(string := "", flush:= true) -> void:
 	if !active_text:
+		print("no Active Textbox")
 		return
 
 	var old_text := active_text.bbcode_text
@@ -63,8 +64,9 @@ func text(string, flush:= true) -> void:
 		next()
 
 
-func choice(choices:Array, time := 0.0) -> void:
+func choice(choices := [] , time := 0.0) -> void:
 	if !active_choice_box:
+		print("No active choice box")
 		return
 
 	undo.create_action("Choice")
@@ -85,6 +87,7 @@ func choice(choices:Array, time := 0.0) -> void:
 
 func input(variable := "", default:= "", type := TYPE_STRING, max_chars := -1) -> void:
 	if !active_input_box:
+		print("No active input box")
 		return
 
 	var line_edit = LineEdit.new()
@@ -140,4 +143,4 @@ func _on_choice_timeout() -> void:
 
 
 func _on_choice_end(index) -> void:
-	queue_event(active_event.get_next("choice%d"%[index]))
+	queue_event(active_event.get_next("%dchoice%d"%[current_line, index]))

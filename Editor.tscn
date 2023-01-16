@@ -27,6 +27,7 @@ __meta__ = {
 		not changeable?
 		validate first
 			-> update edit on edit
+		all strings are c_escaped
 	-Edit
 		can we copy from dialogic?
 		- dragable elements
@@ -70,7 +71,7 @@ anchor_bottom = 1.0
 margin_top = 40.0
 
 [node name="TimelineEdit" type="GraphEdit" parent="HSplitContainer"]
-margin_right = 1024.0
+margin_right = 506.0
 margin_bottom = 560.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -102,27 +103,32 @@ margin_bottom = 40.0
 text = "+"
 
 [node name="Label" type="Label" parent="HSplitContainer/Edit"]
-margin_top = 45.0
+margin_top = 48.0
+margin_right = 42.0
+margin_bottom = 72.0
 text = "Name:"
+valign = 1
 
 [node name="NameLine" type="LineEdit" parent="HSplitContainer/Edit"]
 anchor_right = 1.0
 margin_left = 50.0
-margin_top = 40.0
+margin_top = 48.0
+margin_right = -8.0
+margin_bottom = 72.0
 
 [node name="Scroll" type="ScrollContainer" parent="HSplitContainer/Edit"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 64.0
+margin_top = 80.0
 
 [node name="Edits" type="VBoxContainer" parent="HSplitContainer/Edit/Scroll"]
-margin_right = 506.0
 size_flags_horizontal = 3
+custom_constants/separation = 8
 
 [node name="AddMenu" type="PopupMenu" parent="HSplitContainer/Edit"]
 margin_right = 20.0
 margin_bottom = 20.0
-items = [ "Choice", null, 0, false, false, 0, 0, null, "", false, "Text", null, 0, false, false, 1, 0, null, "", false, "Code", null, 0, false, false, 2, 0, null, "", false ]
+items = [ "Choice", null, 0, false, false, 0, 0, null, "", false, "Text", null, 0, false, false, 1, 0, null, "", false, "Code", null, 0, false, false, 2, 0, null, "", false, "Input", null, 0, false, false, 3, 0, null, "", false ]
 
 [connection signal="pressed" from="Toolbar/Add" to="." method="_on_Add_pressed"]
 [connection signal="pressed" from="Toolbar/Button" to="Toolbar/Button/FileDialog" method="popup_centered"]

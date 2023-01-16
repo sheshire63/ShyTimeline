@@ -59,12 +59,7 @@ func setup() -> void:
 		add_child(label)
 		var pos = label.get_position_in_parent()
 		set_slot(pos, false, 0 ,0 , true, TYPE.FLOW, COLOR[TYPE.FLOW])
-
-	# next is already included in event.next
-	#var out_label = Label.new()
-	#out_label.text = "Next"
-	#add_child(out_label)
-	#set_slot(get_child_count() - 1, false, 0, 0, true, TYPE.FLOW, COLOR[TYPE.FLOW])
+	rect_size = Vector2.ZERO # defaults to a calculated minsize
 
 
 func get_port_count_left() -> int:

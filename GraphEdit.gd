@@ -14,7 +14,10 @@ signal request_edit(event)
 
 var nodes := {0: ShyTimelineNode}
 var timeline: Timeline setget _set_timeline; func _set_timeline(new) -> void:
+	if timeline and timeline.is_connected("connections_changed", self, "setup"):
+		timeline.disconnect("connections_changed", self, "setup")
 	timeline = new
+	timeline.connect("connections_changed", self, "setup")
 	setup()
 var undo := UndoRedo.new()
 var selected_nodes := []
@@ -61,6 +64,7 @@ func setup() -> void:
 
 
 func clear() -> void:
+	clear_connections()
 	for i in get_children():
 		if i is GraphNode:
 			remove_child(i)
@@ -168,8 +172,6 @@ func _connect_node(from: String, from_slot: int, to: String, to_slot: int) -> vo
 		connect_node(from, from_slot, to, to_slot)
 	#from_node.link_out(from_slot, to, to_slot)
 	#to_node.link_in(to_slot, from, from_slot)
-
-	#todo add name to next in event
 	get_node(from).event.add_to_next_entry(from_slot, to, to_slot)
 
 
@@ -181,4 +183,3 @@ func _disconnect_node(from: String, from_slot: int, to: String, to_slot: int) ->
 	#from_node.unlink_out(from_slot, to, to_slot)
 	#to_node.unlink_in(to_slot, from, from_slot)
 	get_node(from).event.remove_from_next_entry(from_slot, to, to_slot)
-	#todo remove from next in event

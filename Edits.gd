@@ -69,6 +69,12 @@ func load_element(type: String) -> void:
 func add_edit(edit: EventEdit) -> void:
 	assert(event)
 	edit.event = event
+	if !edit.try_parse(box.get_child_count()):
+		print("Unable to parse event")
+		edit.queue_free()
+		edit = code_edit.instance()
+		edit.event = event
+	edit.timeline = timeline
 	box.add_child(edit)
 
 

@@ -2,6 +2,8 @@ tool
 extends Resource
 class_name Timeline
 
+signal connections_changed # used to inform the editor that the slots have changed
+
 export var events: Dictionary = {}
 export var actors := {}
 export var variables := {}
@@ -45,3 +47,7 @@ func find_event_name(event) -> String:
 		return events.keys()[pos]
 	printt("event not in Timeline:", event)
 	return ""
+
+
+func update_nexts() -> void:
+	emit_signal("connections_changed")

@@ -20,6 +20,8 @@ var undo := UndoRedo.new()
 
 var queue := []
 var active_event: Event
+var current_line := 0
+
 
 var active_actor: Actor setget _set_active_actor; func _set_active_actor(actor: Actor) -> void:
 	active_actor = actor
@@ -72,6 +74,7 @@ func handle(event: Event) -> void:
 	assert(event)
 	active_event = event
 	for line in event.get_line_size():
+		current_line = line
 		if line in event.controls:
 			self.active_control = event.controls[line]
 		if line in event.actors:
@@ -83,6 +86,7 @@ func handle(event: Event) -> void:
 	for i in event.get_next("next"):
 		queue_event(i)
 	active_event = null
+	current_line = -1
 
 
 func queue_event(event_id: String) -> void:

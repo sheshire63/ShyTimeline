@@ -39,6 +39,12 @@ func add_line(line : String) -> void:
 
 func remove_line(line : int) -> void:
 	lines.remove(line)
+	var to_remove := []
+	for key in next:
+		if (key is int and key == line) or (key is String and key.begins_with(str(line))):
+			to_remove.append(key)
+	for key in to_remove:
+		next.erase(key)
 	emit_changed()
 
 
@@ -48,13 +54,19 @@ func set_line(text : String, id: int) -> void:
 
 
 func add_next_entry(key) -> void:
-	next[key] = [] as PoolStringArray
-	emit_changed()
+	if not next.has(key):
+		next[key] = [] as PoolStringArray
+		emit_changed()
 
 
 func remove_next_entry(key) -> void:
-	next.erase(key)
-	emit_changed()
+	if next.has(key):
+		next.erase(key)
+		emit_changed()
+
+
+func has_slot_entry(key) -> bool:
+	return key in next
 
 
 func swtich_next_entry(key_a, key_b) -> void:
@@ -89,6 +101,8 @@ func add_to_next_entry(index: int, value: String, next_index := -1) -> void:
 	var array = next.values()[index]# doing this in one step somehow did not work
 	array.append(value)
 	next[next.keys()[index]] = array
+	sort_next_entrys()
+
 
 
 func remove_from_next_entry(index: int, value: String, next_index := -1) -> void:
@@ -97,6 +111,14 @@ func remove_from_next_entry(index: int, value: String, next_index := -1) -> void
 
 	next[next.keys()[index]].remove(next.values()[index].find(value))
 
+
+func sort_next_entrys() -> void:
+	var keys = next.keys()
+	keys.sort()
+	var new = {}
+	for key in next.keys():
+		new[key] = next[key]
+	next = new
 """
 	how to handle slots
 		have an dict

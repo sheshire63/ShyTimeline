@@ -25,7 +25,7 @@ func get_plugin_name() -> String:
 
 
 func handles(object: Object) -> bool:
-	return false
+	#return false # this is to better debug the handler 
 	return object is BaseHandler
 
 
