@@ -51,7 +51,6 @@ func text(string := "", flush:= true) -> void:
 
 	var speed = (active_text.text.length() - active_text.visible_characters) / cps
 	var tween = get_tree().create_tween()
-	print(speed)
 	tween.tween_property(active_text, "visible_characters", active_text.text.length() + 1, speed)
 	yield_queue.append(tween)
 	yield(tween, "finished")

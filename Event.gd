@@ -85,6 +85,7 @@ func swtich_next_entry(key_a, key_b) -> void:
 	elif b != null:
 		next[key_a] = b
 		next.erase(key_b)
+	call_deferred("emit_changed")
 
 
 func replace_next_event(old: String, new: String) -> void:

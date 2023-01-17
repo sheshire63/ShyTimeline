@@ -22,7 +22,7 @@ var timeline: Timeline
 var slot_button: CheckButton
 var remove_button: Button
 var bottom_box: HBoxContainer
-var re_match: RegExMatch
+var re_match := RegExMatch.new()
 
 
 #todo we need a signal/function to remove the next entrys from event if we remove the line
