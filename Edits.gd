@@ -8,7 +8,13 @@ const folder := "res://addons/ShyTimeline/Edits/"
 
 # : Timeline # definging timeline as type causes this to be null -.-
 var timeline: Timeline
-var event: Event
+var event: Event setget _set_event; func _set_event(new):
+	if event != new:
+		if event and event.is_connected("changed", self, "edit_event"):
+			event.disconnect("changed", self, "edit_event")
+		if new:
+			new.connect("changed", self, "edit_event", [new, timeline])
+	event = new
 
 var types := {}
 
@@ -39,7 +45,7 @@ func edit_event(_event: Event, _timeline: Timeline) -> void:
 	assert(_timeline and _event)
 	clear()
 	timeline = _timeline
-	event = _event
+	self.event = _event
 	name_edit.text = timeline.find_event_name(event)
 	for line in event.lines:
 		var type: String = line.left(line.find("("))
