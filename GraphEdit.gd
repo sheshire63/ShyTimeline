@@ -18,6 +18,8 @@ var timeline: Timeline setget _set_timeline; func _set_timeline(new) -> void:
 		timeline.disconnect("connections_changed", self, "setup")
 	timeline = new
 	timeline.connect("connections_changed", self, "setup")
+	scroll_offset = timeline.editor_pos
+	zoom = timeline.editor_zoom
 	setup()
 var undo := UndoRedo.new()
 var selected_nodes := []

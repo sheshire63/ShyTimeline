@@ -7,6 +7,8 @@ signal connections_changed # used to inform the editor that the slots have chang
 export var events: Dictionary = {}
 export var actors := {}
 export var variables := {}
+export var editor_pos := Vector2.ZERO
+export var editor_zoom := 1.0
 
 
 # public ---------------------------------------------------------
