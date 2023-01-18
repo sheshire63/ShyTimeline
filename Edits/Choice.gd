@@ -5,7 +5,7 @@ onready var box := $VBoxContainer
 onready var add_line_line := $add_line
 
 var time := SpinBox.new()
-var line_scene := preload("res://addons/Timeline/ItemEdit.tscn")
+var line_scene := preload("res://addons/ShyTimeline/ItemEdit.tscn")
 var text_changed = false
 
 #TODO REMAKE THIS EDIT

@@ -4,7 +4,7 @@ extends Control
 #signal request_rename(event, new)
 
 
-const folder := "res://addons/Timeline/Edits/"
+const folder := "res://addons/ShyTimeline/Edits/"
 
 # : Timeline # definging timeline as type causes this to be null -.-
 var timeline: Timeline
@@ -16,7 +16,7 @@ onready var box := $Scroll/Edits
 onready var menu := $AddMenu
 onready var add_button := $Toolbar/Add
 onready var name_edit := $NameLine
-var code_edit := preload("res://addons/Timeline/Edits/Code.tscn")
+var code_edit := preload("res://addons/ShyTimeline/Edits/Code.tscn")
 
 
 func _ready() -> void:

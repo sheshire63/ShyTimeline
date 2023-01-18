@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://addons/Timeline/Edits.gd" type="Script" id=1]
+[ext_resource path="res://addons/ShyTimeline/Edits.gd" type="Script" id=1]
 
 [node name="Edit" type="Control"]
 visible = false

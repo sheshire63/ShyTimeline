@@ -2,7 +2,7 @@ tool
 extends EditorPlugin
 
 
-var editor: Control = preload("res://addons/Timeline/Editor.tscn").instance()
+var editor: Control = preload("res://addons/ShyTimeline/Editor.tscn").instance()
 
 
 func _enter_tree() -> void:
@@ -25,7 +25,7 @@ func get_plugin_name() -> String:
 
 
 func handles(object: Object) -> bool:
-	#return false # this is to better debug the handler 
+	#return false # this is to better debug the handler
 	return object is BaseHandler
 
 
