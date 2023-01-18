@@ -25,6 +25,7 @@ func _ready() -> void:
 	setup()
 	event.connect("changed", self, "setup")
 	connect("dragged", self, "_on_dragged")
+	connect("close_request", self, "_on_close_request")
 
 
 # public ----------------------------------------------------------------
@@ -105,3 +106,7 @@ func get_port_type_right(port) -> int:
 func _on_dragged(_from: Vector2, to: Vector2) -> void:
 	assert(event)
 	event.editor_position = to
+
+func _on_close_request() -> void:
+	timeline.remove_event(event)
+	queue_free()

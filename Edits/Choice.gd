@@ -8,14 +8,6 @@ var time := SpinBox.new()
 var line_scene := preload("res://addons/ShyTimeline/ItemEdit.tscn")
 var text_changed = false
 
-#TODO REMAKE THIS EDIT
-
-"""
-its currently broken
-make the choices a custom scene/node
-add a pseude input that creates a choice on text input
-automaticly create the entry for timeout if time > 0
-"""
 
 func _ready() -> void:
 	_add_time_control()
@@ -39,6 +31,7 @@ func add(choice:= "") -> void:
 	new.connect("request_move_up", self, "_move_segment_up", [new])
 	new.connect("request_move_down", self, "_move_segment_down", [new])
 	call_deferred("_update_size")
+	add_line_line.focus_previous = get_path_to(new.line)
 
 
 # static/overrides ----------------------------------------------------------------

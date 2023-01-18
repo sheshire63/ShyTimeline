@@ -102,7 +102,11 @@ func _on_TimelineEdit_copy_nodes_request() -> void:
 
 
 func _on_TimelineEdit_delete_nodes_request(nodes: Array) -> void:
-	pass # Replace with function body.
+	for i in nodes:
+		timeline.remove_event(i.event)
+		remove_child(i)
+		i.queue_free()
+
 
 
 func _on_TimelineEdit_disconnection_request(from: String, from_slot: int, to: String, to_slot: int) -> void:

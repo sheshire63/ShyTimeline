@@ -22,6 +22,14 @@ func add_event(event: Event) -> void:
 	emit_changed()
 
 
+func remove_event(event: Event) -> void:
+	var key = events.values().find(event)
+	if key:
+		key = events.keys()[key]
+		events.erase(key)
+		emit_changed()
+
+
 func get_event(name: String) -> Event:
 	return events.get(name)
 

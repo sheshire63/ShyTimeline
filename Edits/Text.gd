@@ -34,7 +34,7 @@ func _on_TextEdit_focus_exited() -> void:
 
 
 func _update_size() -> void:
-	var size = text.margin_top - text.margin_bottom
-	size += max(text.get_line_count() * text.get_line_height(), 64)
+	var size = text.margin_top + abs(text.margin_bottom)
+	size += max((text.get_line_count() + 1)  * text.get_line_height(), 64)
 	rect_size.y = size
 	rect_min_size.y = size

@@ -9,7 +9,13 @@ onready var save_dialog := $Toolbar/Save/SaveFileDialog
 
 
 export onready var timeline: Resource setget _set_timeline;func _set_timeline(new):
-	printt("editor", timeline, "->", new)
+	if timeline == new:
+		return
+	if timeline and timeline.is_connected("changed", self, "_on_timeline_changed"):
+		timeline.disconnect("changed", self, "_on_timeline_changed")
+	if new:
+		new.connect("changed", self, "_on_timeline_changed")
+
 	timeline = new
 	sub_edits.clear()
 	graph.timeline = timeline
@@ -65,3 +71,7 @@ func _on_SaveFileDialog_file_selected(path: String) -> void:
 	var err = ResourceSaver.save(path, timeline)
 	if err != OK:
 		print("error: '%s'failed to save timeline to '%s'" % [err, path])
+
+
+func _on_timeline_changed() -> void:
+	sub_edits.clear()
