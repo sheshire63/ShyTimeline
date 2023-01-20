@@ -26,7 +26,6 @@ export onready var timeline: Resource setget _set_timeline;func _set_timeline(ne
 
 
 func _ready() -> void:
-	print("editor ready")
 	graph.connect("request_edit", self, "edit")
 	graph.connect("node_unselected", self, "_on_node_unselected", [], CONNECT_DEFERRED)
 

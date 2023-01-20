@@ -26,7 +26,6 @@ var code_edit := preload("res://addons/ShyTimeline/Edits/Code.tscn")
 
 
 func _ready() -> void:
-	print("edits ready")
 	assert(box)
 	load_types()
 	visible = false
