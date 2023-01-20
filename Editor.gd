@@ -3,9 +3,10 @@ extends Control
 
 signal request_inspect(item)
 
-onready var graph := $HSplitContainer/TimelineEdit
+onready var graph := $HSplitContainer/HSplitContainer/TimelineEdit
 onready var sub_edits := $HSplitContainer/Edit
 onready var save_dialog := $Toolbar/Save/SaveFileDialog
+onready var var_edit := $HSplitContainer/HSplitContainer/VariableEdit
 
 
 export onready var timeline: Resource setget _set_timeline;func _set_timeline(new):
@@ -19,6 +20,9 @@ export onready var timeline: Resource setget _set_timeline;func _set_timeline(ne
 	timeline = new
 	sub_edits.clear()
 	graph.timeline = timeline
+	var_edit.set_timeline(timeline)
+
+
 
 
 func _ready() -> void:
@@ -75,3 +79,11 @@ func _on_SaveFileDialog_file_selected(path: String) -> void:
 
 func _on_timeline_changed() -> void:
 	sub_edits.clear()
+
+
+func _on_Variables_pressed() -> void:
+	var_edit.visible = !var_edit.visible
+
+
+func _on_New_pressed() -> void:
+	self.timeline = Timeline.new()

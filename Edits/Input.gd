@@ -15,7 +15,8 @@ func _ready() -> void:
 	default.text = re_match.get_string("default").c_unescape()
 	type.select(type.get_item_index(int(re_match.get_string("type"))))
 	chars.value = int(re_match.get_string("chars"))
-	variable.completion_list = timeline.variables.keys()
+	if timeline:
+		variable.completion_list = timeline.variables.keys()
 
 
 static func get_regex() -> String:

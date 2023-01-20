@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/ShyTimeline/Editor.gd" type="Script" id=1]
 [ext_resource path="res://addons/ShyTimeline/GraphEdit.gd" type="Script" id=2]
 [ext_resource path="res://addons/ShyTimeline/Edit.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/ShyTimeline/VariableEdit.tscn" type="PackedScene" id=4]
 
 [node name="Editor" type="Control"]
 anchor_right = 1.0
@@ -51,9 +52,15 @@ margin_right = 20.0
 margin_bottom = 40.0
 text = "+"
 
-[node name="Open" type="Button" parent="Toolbar"]
+[node name="New" type="Button" parent="Toolbar"]
 margin_left = 24.0
-margin_right = 83.0
+margin_right = 64.0
+margin_bottom = 40.0
+text = "New"
+
+[node name="Open" type="Button" parent="Toolbar"]
+margin_left = 68.0
+margin_right = 127.0
 margin_bottom = 40.0
 text = "Open..."
 
@@ -66,8 +73,8 @@ mode = 0
 filters = PoolStringArray( "*.res", "*.tres" )
 
 [node name="Save" type="Button" parent="Toolbar"]
-margin_left = 87.0
-margin_right = 140.0
+margin_left = 131.0
+margin_right = 184.0
 margin_bottom = 40.0
 text = "Save..."
 
@@ -78,21 +85,39 @@ rect_min_size = Vector2( 256, 256 )
 window_title = "Save a Timeline"
 filters = PoolStringArray( "*.res", "*.tres" )
 
+[node name="Variables" type="Button" parent="Toolbar"]
+margin_left = 188.0
+margin_right = 270.0
+margin_bottom = 40.0
+text = "Variables..."
+
 [node name="HSplitContainer" type="HSplitContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 40.0
 
-[node name="TimelineEdit" type="GraphEdit" parent="HSplitContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="HSplitContainer"]
+margin_right = 1024.0
+margin_bottom = 560.0
+size_flags_horizontal = 3
+
+[node name="VariableEdit" parent="HSplitContainer/HSplitContainer" instance=ExtResource( 4 )]
+visible = false
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 256.0
+margin_bottom = 560.0
+rect_min_size = Vector2( 256, 0 )
+
+[node name="TimelineEdit" type="GraphEdit" parent="HSplitContainer/HSplitContainer"]
 margin_right = 1024.0
 margin_bottom = 560.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 right_disconnects = true
-scroll_offset = Vector2( -506, 0 )
 script = ExtResource( 2 )
 
-[node name="NodeMenu" type="PopupMenu" parent="HSplitContainer/TimelineEdit"]
+[node name="NodeMenu" type="PopupMenu" parent="HSplitContainer/HSplitContainer/TimelineEdit"]
 margin_right = 20.0
 margin_bottom = 20.0
 items = [ "Flow", null, 0, false, false, 0, 0, null, "", false ]
@@ -100,20 +125,22 @@ items = [ "Flow", null, 0, false, false, 0, 0, null, "", false ]
 [node name="Edit" parent="HSplitContainer" instance=ExtResource( 3 )]
 
 [connection signal="pressed" from="Toolbar/Add" to="." method="_on_Add_pressed"]
+[connection signal="pressed" from="Toolbar/New" to="." method="_on_New_pressed"]
 [connection signal="pressed" from="Toolbar/Open" to="Toolbar/Open/LoadFileDialog" method="popup_centered"]
 [connection signal="file_selected" from="Toolbar/Open/LoadFileDialog" to="." method="_on_FileDialog_file_selected"]
 [connection signal="pressed" from="Toolbar/Save" to="." method="_on_Save_pressed"]
 [connection signal="file_selected" from="Toolbar/Save/SaveFileDialog" to="." method="_on_SaveFileDialog_file_selected"]
-[connection signal="connection_from_empty" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_from_empty"]
-[connection signal="connection_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_request"]
-[connection signal="connection_to_empty" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_to_empty"]
-[connection signal="copy_nodes_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_copy_nodes_request"]
-[connection signal="delete_nodes_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_delete_nodes_request"]
-[connection signal="disconnection_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_disconnection_request"]
-[connection signal="duplicate_nodes_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_duplicate_nodes_request"]
-[connection signal="node_selected" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_node_selected"]
-[connection signal="node_unselected" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_node_unselected"]
-[connection signal="paste_nodes_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_paste_nodes_request"]
-[connection signal="popup_request" from="HSplitContainer/TimelineEdit" to="HSplitContainer/TimelineEdit" method="_on_TimelineEdit_popup_request"]
-[connection signal="id_pressed" from="HSplitContainer/TimelineEdit/NodeMenu" to="HSplitContainer/TimelineEdit" method="_on_NodeMenu_id_pressed"]
-[connection signal="popup_hide" from="HSplitContainer/TimelineEdit/NodeMenu" to="HSplitContainer/TimelineEdit" method="_on_PopupMenu_popup_hide"]
+[connection signal="pressed" from="Toolbar/Variables" to="." method="_on_Variables_pressed"]
+[connection signal="connection_from_empty" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_from_empty"]
+[connection signal="connection_request" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_request"]
+[connection signal="connection_to_empty" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_to_empty"]
+[connection signal="copy_nodes_request" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_copy_nodes_request"]
+[connection signal="delete_nodes_request" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_delete_nodes_request"]
+[connection signal="disconnection_request" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_disconnection_request"]
+[connection signal="duplicate_nodes_request" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_duplicate_nodes_request"]
+[connection signal="node_selected" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_node_selected"]
+[connection signal="node_unselected" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_node_unselected"]
+[connection signal="paste_nodes_request" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_paste_nodes_request"]
+[connection signal="popup_request" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_popup_request"]
+[connection signal="id_pressed" from="HSplitContainer/HSplitContainer/TimelineEdit/NodeMenu" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_NodeMenu_id_pressed"]
+[connection signal="popup_hide" from="HSplitContainer/HSplitContainer/TimelineEdit/NodeMenu" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_PopupMenu_popup_hide"]
