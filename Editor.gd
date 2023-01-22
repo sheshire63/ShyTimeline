@@ -6,7 +6,9 @@ signal request_inspect(item)
 onready var graph := $HSplitContainer/HSplitContainer/TimelineEdit
 onready var sub_edits := $HSplitContainer/Edit
 onready var save_dialog := $Toolbar/Save/SaveFileDialog
-onready var var_edit := $HSplitContainer/HSplitContainer/VariableEdit
+onready var tab_bar := $HSplitContainer/HSplitContainer/TabContainer
+onready var var_edit := $HSplitContainer/HSplitContainer/TabContainer/Variables
+onready var char_edit := $HSplitContainer/HSplitContainer/TabContainer/Charactes
 
 
 export onready var timeline: Resource setget _set_timeline;func _set_timeline(new):
@@ -21,6 +23,7 @@ export onready var timeline: Resource setget _set_timeline;func _set_timeline(ne
 	sub_edits.clear()
 	graph.timeline = timeline
 	var_edit.set_timeline(timeline)
+	char_edit.set_timeline(timeline)
 
 
 
@@ -28,6 +31,7 @@ export onready var timeline: Resource setget _set_timeline;func _set_timeline(ne
 func _ready() -> void:
 	graph.connect("request_edit", self, "edit")
 	graph.connect("node_unselected", self, "_on_node_unselected", [], CONNECT_DEFERRED)
+	char_edit.connect("request_inspect", self, "_request_inspect")
 
 
 func add_event() -> void:
@@ -39,8 +43,9 @@ func add_event() -> void:
 
 func edit(event: Event) -> void:
 	sub_edits.edit_event(event, timeline)
-	emit_signal("request_inspect", event)
+	_request_inspect(event)
 	#todo also edit all selected in Inspector?
+	#	-is this possible? the engine can, but there is no function for it
 	# -> use property list to have not all properties in inpector
 
 
@@ -81,8 +86,12 @@ func _on_timeline_changed() -> void:
 
 
 func _on_Variables_pressed() -> void:
-	var_edit.visible = !var_edit.visible
+	tab_bar.visible = !tab_bar.visible
 
 
 func _on_New_pressed() -> void:
 	self.timeline = Timeline.new()
+
+
+func _request_inspect(object: Object) -> void:
+	emit_signal("request_inspect", object)

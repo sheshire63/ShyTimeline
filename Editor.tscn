@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/ShyTimeline/Editor.gd" type="Script" id=1]
 [ext_resource path="res://addons/ShyTimeline/GraphEdit.gd" type="Script" id=2]
 [ext_resource path="res://addons/ShyTimeline/Edit.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/ShyTimeline/VariableEdit.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/ShyTimeline/CharEdit.tscn" type="PackedScene" id=5]
 
 [node name="Editor" type="Control"]
 anchor_right = 1.0
@@ -101,20 +102,31 @@ margin_right = 1024.0
 margin_bottom = 560.0
 size_flags_horizontal = 3
 
-[node name="VariableEdit" parent="HSplitContainer/HSplitContainer" instance=ExtResource( 4 )]
-visible = false
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 256.0
+[node name="TabContainer" type="TabContainer" parent="HSplitContainer/HSplitContainer"]
+margin_right = 506.0
 margin_bottom = 560.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+tab_align = 0
+
+[node name="Variables" parent="HSplitContainer/HSplitContainer/TabContainer" instance=ExtResource( 4 )]
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
 rect_min_size = Vector2( 256, 0 )
 
+[node name="Charactes" parent="HSplitContainer/HSplitContainer/TabContainer" instance=ExtResource( 5 )]
+visible = false
+
 [node name="TimelineEdit" type="GraphEdit" parent="HSplitContainer/HSplitContainer"]
+margin_left = 518.0
 margin_right = 1024.0
 margin_bottom = 560.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 right_disconnects = true
+scroll_offset = Vector2( -256, 0 )
 script = ExtResource( 2 )
 
 [node name="NodeMenu" type="PopupMenu" parent="HSplitContainer/HSplitContainer/TimelineEdit"]
