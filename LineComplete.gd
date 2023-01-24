@@ -9,29 +9,30 @@ var hover_index := 0
 var suggestion_list: PoolStringArray = []
 
 func _ready() -> void:
-	connect("text_changed", self, "_on_text_entered")
+	connect("text_changed", self, "_on_text_changed")
 	connect("focus_exited", self, "_on_focus_exited")
 	add_child(menu)
-	menu.popup_exclusive = true
 	menu.connect("index_pressed", self, "_complete")
 
 
-func _on_text_entered(text := "") -> void:
+func _on_text_changed(text := "") -> void:
 	suggestion_list = []
 	hover_index = 0
 	for i in completion_list:
 		if text != "" and i.to_lower().begins_with(text.to_lower()):
 			suggestion_list.append(i)
-	
+
+	menu.clear()
 	if suggestion_list:
-		menu.clear()
 		for i in suggestion_list:
 			menu.add_item(i)
-		
+
 		var pos = caret_position
 		menu.popup(Rect2(Vector2(0, rect_size.y) + rect_global_position, Vector2(rect_size.x, menu.rect_size.y)))
 		grab_focus()
 		caret_position = pos
+	else:
+		menu.hide()
 
 
 func _input(event: InputEvent) -> void:

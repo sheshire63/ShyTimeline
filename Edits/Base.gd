@@ -19,8 +19,12 @@ export var show_slot_button := true setget _set_show_slot_button; func _set_show
 
 var event: Event
 var timeline: Timeline
+
+var label: Label
 var slot_button: CheckButton
 var remove_button: Button
+var move_up_button: Button
+var move_down_button: Button
 var bottom_box: HBoxContainer
 var re_match := RegExMatch.new()
 
@@ -37,6 +41,7 @@ func _ready() -> void:
 	_add_label()
 	_add_remove_button()
 	_add_bottom_box()
+	_add_move_buttons()
 	_add_slot_button()
 
 
@@ -130,7 +135,7 @@ func _add_remove_button() -> void:
 
 
 func _add_label() -> void:
-	var label = Label.new()
+	label = Label.new()
 	label.anchor_right = 1.0
 	label.margin_left = 16.0
 	label.margin_top = 16.0
@@ -140,3 +145,32 @@ func _add_label() -> void:
 	label.align = label.ALIGN_CENTER
 	label.valign = label.ALIGN_CENTER
 	add_child(label)
+
+
+func _add_move_buttons() -> void:
+	move_up_button = Button.new()
+	move_up_button.text = "^"
+	move_up_button.anchor_left = 1.0
+	move_up_button.margin_left = -40
+	move_up_button.margin_bottom = 40
+	move_up_button.connect("pressed", self, "_on_move_up_pressed")
+
+	move_down_button = Button.new()
+	move_down_button.text = "v"
+	move_down_button.anchor_left = 1.0
+	move_down_button.anchor_top = 1.0
+	move_down_button.margin_left = -40
+	move_down_button.margin_top = -40
+	move_down_button.connect("pressed", self, "_on_move_down_pressed")
+
+
+func _on_move_down_pressed() -> void:
+	var pos = get_line_number()
+	if pos < event.get_line_count():
+		event.switch_lines(pos, pos + 1)
+
+
+func _on_move_up_pressed() -> void:
+	var pos = get_line_number()
+	if pos > 0:
+		event.switch_lines(pos, pos - 1)

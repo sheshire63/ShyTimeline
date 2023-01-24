@@ -89,9 +89,9 @@ func _move_segment_up(line: Control) -> void:
 
 func _move_segment(line: Control, to: int) -> void:
 	if to >= 0 and to < box.get_child_count():
-		event.swtich_next_entry(
+		event.switch_next_entry(
 			"%dchoice%d" % [get_position_in_parent(), line.get_position_in_parent()],
-			"%dchoice%d" % [get_position_in_parent(), to])
+			"%dchoice%d" % [get_position_in_parent(), to])#todo move to event and check all entries starting with linenumber
 		box.move_child(line, to)
 		_update_text()
 

@@ -5,9 +5,16 @@ onready var text := $TextEdit
 var changed := false
 
 func _ready() -> void:
-	if event.lines:
-		text.text = re_match.get_string("text")
+	if get_line_number() in event.actors:
+		text.text += event.actors[get_line_number()] + ", "
+	if text.text:
+		text.text += "@"
 
+	if re_match:
+		text.text += re_match.get_string("text")
+
+	if timeline:
+		text.completion_list = timeline.actors.keys()
 
 # static/override ----------------------------------------------------------------
 
@@ -28,7 +35,17 @@ func _on_TextEdit_text_changed() -> void:
 
 func _on_TextEdit_focus_exited() -> void:
 	if changed:
-		var line = "text(\"%s\")" % text.text.c_escape()
+		var re := RegEx.new()
+		var err = re.compile("^(?:(?<actors>(?:\\w+\\s*,\\s*)*)@)?(?<text>.+)?")
+		assert(err == OK)
+		var re_match = re.search(text.text)
+		var line := ""
+		if re_match:
+			line = "text(\"%s\")" % re_match.get_string("text").c_escape()
+			event.actors[get_line_number()] = re_match.get_string("actors").replace(" ", "").split(",")
+		else:
+			print("failed to extract actors")
+			line = text.text.c_escape()
 		set_line(line)
 		changed = false
 

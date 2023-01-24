@@ -69,22 +69,35 @@ func has_slot_entry(key) -> bool:
 	return key in next
 
 
-func swtich_next_entry(key_a, key_b) -> void:
-	var a = next.get(key_a)
-	var b = next.get(key_b)
+func switch_lines(a: int, b: int) -> void:#todo same for controls
+	_switch_entries_in_dict(a, b, actors)
+	_switch_entries_in_dict(a, b, controls)
+	_switch_entries_in_dict(a, b, next)
 
-	#switch
-	if a != null and b != null:
-		next[key_a] = b
-		next[key_b] = a
+	assert(lines.size() > a and lines.size() > b)
+	var a_value = lines[a]
+	lines[a] = lines[b]
+	lines[b] = a_value
 
-	#add new key and remove the old key
-	elif a != null:
-		next[key_b] = a
-		next.erase(key_a)
-	elif b != null:
-		next[key_a] = b
-		next.erase(key_b)
+	var next_entries := []
+	var re = RegEx.new()
+	var err = re.compile("^(?<number>\\d*)(?<line>[\\w\\W]*)")
+	assert(err == OK)
+	for i in next:
+		if i is String:
+			var re_match = re.search(i)
+			if re_match:
+				var digit = re_match.get_string("number")
+				if digit and int(digit) == a:
+					next_entries.append([i, str(b) + re_match.get_string("line")])
+	for i in next_entries:
+		_switch_entries_in_dict(i[0], i[1], next)
+
+	call_deferred("emit_changed")
+
+
+func switch_next_entry(key_a, key_b) -> void:
+	_switch_entries_in_dict(key_a, key_b, next)
 	call_deferred("emit_changed")
 
 
@@ -120,22 +133,19 @@ func sort_next_entrys() -> void:
 	for key in next.keys():
 		new[key] = next[key]
 	next = new
-"""
-	how to handle slots
-		have an dict
-			key
-				linenumber as key
-			value
-				we need next to be an array of event names
-					corresponds to the connections
-				inputs?
-					only flow at start?
-						can we add more later?
-							if we build the node from code it should work easily
-					conditions?
-						similar to next but as input and different type
-					entry point at line
-						add line to a dict?
-							sting as value as placeholder/var name in editor only
-						the list would be only needed for the editor to add it as a slot
-"""
+
+
+
+func _switch_entries_in_dict(key_a, key_b, dictionary: Dictionary) -> void:
+	var entry_a = dictionary.get(key_a)
+	var entry_b = dictionary.get(key_b)
+
+	if entry_a:
+		dictionary[key_b] = entry_a
+	else:
+		dictionary.erase(key_b)
+
+	if entry_b:
+		dictionary[key_a] = entry_b
+	else:
+		dictionary.erase(key_a)

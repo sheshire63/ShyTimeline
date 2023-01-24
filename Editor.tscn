@@ -13,35 +13,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 1 )
 __meta__ = {
-"_editor_description_": "idea
-	have in the edit a control for each function call in the event lines
-	-> nodes are all the same
-	-? can we create the node view based on the code alone?
-		-> no editor only data
-	-< a text edit in the node would require a custom node system if we want slots in lines
-		-> make the slots still labels that are below the lineEdit
-			-> confusing
-			-> option to hide the code
-				-> all or for each node or all and overwrite
-	-Slots
-		a variable as placeholder in edit that sets the label and gets replaced in code
-	-Code
-		not changeable?
-		validate first
-			-> update edit on edit
-		all strings are c_escaped
-	-Edit
-		can we copy from dialogic?
-		- dragable elements
-		elements
-			- text
-				Text Edit
-				-convert \\n in new lines? or make them to \"\\n\"
-	-Event
-		are universal
-		-some templates
-			choice add a text for choice text
-			"
+"_editor_description_": ""
 }
 
 [node name="Toolbar" type="HBoxContainer" parent="."]
