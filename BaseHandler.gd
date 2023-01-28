@@ -6,6 +6,11 @@ export(Array, NodePath) var text_boxes_paths := []
 export(Array, NodePath) var labels_paths := []
 export(Array, NodePath) var choice_boxes_paths := []
 export(Array, NodePath) var input_boxes_paths := []
+export(Array, NodePath) var animation_players_paths := []
+export(NodePath) var sprite_positions_path := ""
+export var load_sprites_at_ready := true
+export var use_3d_sprites := false
+export var default_z_index := 0
 
 export(Resource) var timeline = Timeline.new()
 export var start := "start"
@@ -15,9 +20,13 @@ var text_boxes := {}
 var labels := {}
 var choice_boxes := {}
 var input_boxes := {}
+var animation_players := {}
+var sprite_positions := {}
+var sprites := {}
+
+
+
 var undo := UndoRedo.new()
-
-
 var queue := []
 var active_event: Event
 var current_line := 0
@@ -45,6 +54,10 @@ func _ready() -> void:
 	labels = _load_nodes_into_dict(labels_paths, Label)
 	choice_boxes = _load_nodes_into_dict(choice_boxes_paths, Container)
 	input_boxes = _load_nodes_into_dict(input_boxes_paths, Container)
+	animation_players = _load_nodes_into_dict(animation_players_paths, AnimationPlayer)
+	_load_sprite_positions()
+	if load_sprites_at_ready:
+		_load_sprites()
 	if text_boxes:
 		active_text = text_boxes.values()[0]
 	if choice_boxes:
@@ -166,3 +179,56 @@ func _update_boxes(name: String) -> void:
 		active_choice_box = choice_boxes[name]
 	if name in input_boxes:
 		active_input_box = input_boxes[name]
+
+
+func _load_sprite_positions() -> void:
+	var node = get_node(sprite_positions_path)
+	if !node:
+		return
+	for i in node.get_children():
+		sprite_positions[i.name] = i
+	var empty = Spatial.new() if use_3d_sprites else Node2D.new()
+	add_child(empty)
+	empty.global_position = Vector3.ZERO if use_3d_sprites else Vector2.ZERO
+	sprite_positions[""] = empty
+
+
+func _load_sprites() -> void:
+	for i in timeline.actors:
+		_get_sprite(i).visible = false
+
+
+func _get_player(id := "") -> AnimationPlayer:
+	return animation_players.get(id)
+
+# returns sprite of the given actor if the actor exists and has a sprite
+# if id is empty returns the first found visible sprite
+func _get_sprite(id := ""):
+	if id in sprites:
+		return sprites[id]
+	var actor = _get_actor(id)
+	if id and actor and actor.sprite:
+		var sprite = AnimatedSprite3D if use_3d_sprites else AnimatedSprite.new()
+		if sprite is AnimatedSprite:
+			sprite.z_as_relative = false
+			sprite.z_index = default_z_index
+		sprite.frames = actor.sprite
+		sprites[id] = sprite
+		sprite_positions[""].add_child(sprite)
+		return sprite
+	if id == "":
+		for i in sprites:
+			if i.visible:
+				return i
+	return null
+
+
+func _get_actor(id:String) -> Actor:
+	return timeline.actors.get(id)
+
+
+func _get_position(id := "") -> Node:
+	if id in sprite_positions:
+		return sprite_positions[id]
+	else:
+		return sprite_positions[""]

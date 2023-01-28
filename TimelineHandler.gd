@@ -25,6 +25,7 @@ func _ready() -> void:
 """
 this Class contains the functions that are called via the expressions
 it is recommended to use a yield so the handler event waits.
+i recommend to have default values for all arguments
 """
 
 func wait(time := 1.0) -> void:
@@ -106,6 +107,105 @@ func input(variable := "", default:= "", type := TYPE_STRING, max_chars := -1) -
 	_clear_box(active_input_box)
 
 
+# sprites --------------------------------------------------
+
+
+func behind(actor := "", target_actor := "") -> void:
+	var target = _get_sprite(target_actor)
+	layer(actor, target.z_index - 1)
+
+
+func front(actor := "", target_actor := "") -> void:
+	var target = _get_sprite(target_actor)
+	layer(actor, target.z_index - 1)
+
+
+func layer(actor := "", layer := 0) -> void:
+	layer = clamp(layer, -4096, 4096)
+	var sprite = _get_sprite(actor)
+	undo.create_action("set_layer")
+	undo.add_do_property(sprite, "z_index", layer)
+	undo.add_undo_property(sprite, "z_index", sprite.z_index)
+	undo.commit_action()
+
+
+func show(actor := "") -> void:
+	var sprite = _get_sprite(actor)
+	undo.create_action("show")
+	undo.add_do_property(sprite, "visible", true)
+	undo.add_undo_property(sprite, "visible", sprite.visible)
+	undo.commit_action()
+
+
+func hide(actor := "") -> void:
+	var sprite = _get_sprite(actor)
+	undo.create_action("hide")
+	undo.add_do_property(sprite, "visible", false)
+	undo.add_undo_property(sprite, "visible", sprite.visible)
+	undo.commit_action()
+
+
+func transform(actor := "", transform := Transform.IDENTITY) -> void:
+	var sprite = _get_sprite(actor)
+	undo.create_action("transform")
+	undo.add_do_property(sprite, "transform", transform)
+	undo.add_undo_property(sprite, "transform", sprite.transform)
+	undo.commit_action()
+
+
+
+# trys to find and play the animation in AnimationPlayers first
+func play(target := "", animation := "", wait := false) -> void:
+	if !animation:
+		return
+	var player = _get_player(target)
+	if !player or not player.has_animation(animation):
+		player = _get_sprite(target)
+	if player and player.has_animation(animation):
+
+		undo.create_action("play")
+		undo.add_do_method(player, "play", animation)
+		if player is AnimationPlayer:
+			undo.add_undo_method(player, "play_backwards", animation)
+		elif player is AnimatedSprite:
+			undo.add_undo_method(player, "play", animation, true)
+		undo.commit_action()
+
+		if wait:
+			yield(player, "animation_finished")
+
+
+func move(actor := "", position_id := "", offset := Vector2.ZERO, transition := -1, easing := 0, time := 1.0, wait := false) -> void:
+	# transition is a Tween.TransitionType
+	var sprite = _get_sprite(actor)
+
+	var target_node: Node2D = _get_position(position_id)
+	var from_node: Node2D = sprite.get_parent()
+	undo.create_action("move")
+	undo.add_do_method(sprite.get_parent(), "remove_child", sprite)
+	undo.add_undo_method(sprite.get_parent(), "add_child", sprite)
+	undo.add_do_method(target_node, "add_child", sprite)
+	undo.add_undo_method(target_node, "remove_child", sprite)
+	undo.add_do_method(sprite, "position", offset)
+	undo.add_undo_method(sprite, "position", sprite.position)
+	undo.commit_action()
+
+	if transition >= 0:
+		var target = target_node.to_global(offset)
+		var result = sprite.transform
+
+		#set the sprite to its old position
+		sprite.transform = from_node.transform.xform(target.transform.affine_inverse().xform(sprite.transform))
+
+		var tween = create_tween()
+		tween.tween_property(sprite, "transform", result, time)
+		tween.set_trans(transition)
+		tween.set_ease(easing)
+		tween.play()
+		if wait and tween.is_running():
+			yield(tween, "finished")
+
+
 # private functions ------------------------------------------------
 
 func _clear_boxes() -> void:
@@ -143,3 +243,5 @@ func _on_choice_timeout() -> void:
 
 func _on_choice_end(index) -> void:
 	queue_event(active_event.get_next("%dchoice%d"%[current_line, index]))
+
+
