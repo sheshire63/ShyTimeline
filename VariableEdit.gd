@@ -8,7 +8,13 @@ var timeline: Timeline
 
 func set_timeline(new: Timeline) -> void:
 	timeline = new
+	clear()
 	load_variables(timeline.variables)
+
+
+func clear() -> void:
+	for i in box.get_children():
+		i.queue_free()
 
 
 func load_variables(variables: Dictionary) -> void:
