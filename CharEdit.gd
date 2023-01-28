@@ -13,8 +13,14 @@ var timeline: Timeline
 
 func set_timeline(new: Timeline) -> void:
 	timeline = new
+	clear()
 	for i in timeline.actors:
 		add(timeline.actors[i], i)
+
+
+func clear() -> void:
+	for i in box.get_children():
+		i.queue_free()
 
 
 func add(actor: Actor, id := "") -> void:
