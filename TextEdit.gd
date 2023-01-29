@@ -5,6 +5,9 @@ class_name TextEditT
 # adds a autocomplete functionality if completion_list is not empty
 
 export var completion_list: PoolStringArray = []
+export var suffix := ""#added to the completion
+export var prefix := ""
+export var limit_to_one := false
 
 var is_trying_completing := false
 var menu := PopupMenu.new()
@@ -56,15 +59,20 @@ func add_completion(index := -1) -> void:
 		var end_pos = pos + i.length()
 		if end_pos >= cursor_get_column():
 			var add_part = suggestions[index]
-			if line.find("@") == -1:
-				add_part += "@"
+			if !limit_to_one or line.find(prefix) == -1:
+				add_part = prefix + add_part
+			if !limit_to_one or line.find(suffix) == -1:
+				add_part += suffix
 			set_line(cursor_get_line(), line.left(pos) + add_part + line.right(end_pos))
 			cursor_set_column(pos + add_part.length())
 		pos = end_pos
 	is_trying_completing = false
 	menu.hide()
 
-
+#todo:
+	#do auto complete
+		#the first word is not hovered
+		#pressing tab/enter will not complete it
 func _on_text_changed() -> void:
 	if completion_list:
 		hover_index = 0
@@ -73,25 +81,25 @@ func _on_text_changed() -> void:
 		if word == "":
 			var line = get_line(cursor_get_line()).left(cursor_get_column())
 			if line != "":
-				word = line.right(max(0, line.rfind(" ")))
-		if word == "":
-			return
-		for i in completion_list:
-			if word and i.to_lower().begins_with(word.to_lower()):
-				suggestions.append(i)
+				word = line.right(max(0, line.rfind(" ") + 1))
+		if word:
+			for i in completion_list:
+				if i.to_lower().begins_with(word.to_lower()):
+					suggestions.append(i)
 
-		menu.clear()
-		if suggestions:
-			is_trying_completing = true
-			for i in suggestions:
-				menu.add_item(i)
+			menu.clear()
+			if suggestions:
+				is_trying_completing = true
+				for i in suggestions:
+					menu.add_item(i)
 
-			var rect = Rect2(get_pos_at_line_column(cursor_get_line(), cursor_get_column()) + rect_global_position, menu.rect_size)
-			menu.popup(rect)
-			grab_focus()
-		else:
-			is_trying_completing = false
-			menu.hide()
+				var rect = Rect2(get_pos_at_line_column(cursor_get_line(), cursor_get_column()) + rect_global_position, menu.rect_size)
+				menu.popup(rect)
+				menu.set_current_index(hover_index)
+				grab_focus()
+				return
+	is_trying_completing = false
+	menu.hide()
 
 
 func _on_focus_exited() -> void:

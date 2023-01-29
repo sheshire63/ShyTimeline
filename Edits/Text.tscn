@@ -23,3 +23,5 @@ syntax_highlighting = true
 show_line_numbers = true
 script = ExtResource( 2 )
 completion_list = PoolStringArray( "Lin" )
+suffix = "@"
+limit_to_one = true
