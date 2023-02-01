@@ -112,15 +112,15 @@ func input(variable := "", default:= "", type := TYPE_STRING, max_chars := -1) -
 
 func behind(actor := "", target_actor := "") -> void:
 	var target = _get_sprite(target_actor)
-	layer(actor, target.z_index - 1)
+	at(actor, target.z_index - 1)
 
 
 func front(actor := "", target_actor := "") -> void:
 	var target = _get_sprite(target_actor)
-	layer(actor, target.z_index - 1)
+	at(actor, target.z_index - 1)
 
 
-func layer(actor := "", layer := 0) -> void:
+func at(actor := "", layer := 0) -> void:
 	layer = clamp(layer, -4096, 4096)
 	var sprite = _get_sprite(actor)
 	undo.create_action("set_layer")
@@ -145,7 +145,7 @@ func hide(actor := "") -> void:
 	undo.commit_action()
 
 
-func transform(actor := "", transform := Transform.IDENTITY) -> void:
+func transform(actor := "", transform = 1.0) -> void:
 	var sprite = _get_sprite(actor)
 	undo.create_action("transform")
 	undo.add_do_property(sprite, "transform", transform)

@@ -1,0 +1,245 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/ShyTimeline/Edits/Sprite.gd" type="Script" id=1]
+
+[node name="Sprite" type="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 40.0
+margin_bottom = -40.0
+
+[node name="Actor" type="OptionButton" parent="VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+text = "Actor"
+align = 1
+icon_align = 1
+
+[node name="Show" type="OptionButton" parent="VBoxContainer"]
+margin_top = 44.0
+margin_right = 1024.0
+margin_bottom = 84.0
+rect_min_size = Vector2( 0, 40 )
+text = "Show/Hide"
+align = 1
+items = [ "Show/Hide", null, false, 0, null, "Hide", null, false, 1, null, "Show", null, false, 2, null ]
+selected = 0
+
+[node name="Control" type="Control" parent="VBoxContainer"]
+margin_top = 88.0
+margin_right = 1024.0
+margin_bottom = 128.0
+rect_min_size = Vector2( 0, 40 )
+
+[node name="use_animation" type="CheckBox" parent="VBoxContainer/Control"]
+anchor_right = 0.5
+anchor_bottom = 1.0
+text = "Animation"
+
+[node name="Animation" type="OptionButton" parent="VBoxContainer/Control"]
+anchor_left = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Control2" type="Control" parent="VBoxContainer"]
+margin_top = 132.0
+margin_right = 1024.0
+margin_bottom = 172.0
+rect_min_size = Vector2( 0, 40 )
+
+[node name="use_pos" type="CheckBox" parent="VBoxContainer/Control2"]
+anchor_right = 0.5
+anchor_bottom = 1.0
+text = "Move To Node:"
+
+[node name="Position" type="LineEdit" parent="VBoxContainer/Control2"]
+anchor_left = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="Control3" type="Control" parent="VBoxContainer"]
+margin_top = 176.0
+margin_right = 1024.0
+margin_bottom = 216.0
+rect_min_size = Vector2( 0, 40 )
+
+[node name="use_layer" type="CheckBox" parent="VBoxContainer/Control3"]
+anchor_right = 0.333
+anchor_bottom = 1.0
+text = "Show at"
+
+[node name="ShowAtMode" type="OptionButton" parent="VBoxContainer/Control3"]
+anchor_left = 0.333
+anchor_right = 0.666
+anchor_bottom = 1.0
+text = "Front"
+items = [ "Front", null, false, 0, null, "Behind", null, false, 1, null, "Layer", null, false, 2, null ]
+selected = 0
+
+[node name="target" type="LineEdit" parent="VBoxContainer/Control3"]
+anchor_left = 0.666
+anchor_right = 1.0
+anchor_bottom = 1.0
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="target2" type="SpinBox" parent="VBoxContainer/Control3"]
+visible = false
+anchor_left = 0.666
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Control4" type="Control" parent="VBoxContainer"]
+margin_top = 220.0
+margin_right = 1024.0
+margin_bottom = 260.0
+rect_min_size = Vector2( 0, 40 )
+
+[node name="use_transform" type="CheckBox" parent="VBoxContainer/Control4"]
+margin_right = 92.0
+margin_bottom = 40.0
+text = "Transform"
+
+[node name="use_3d" type="CheckBox" parent="VBoxContainer/Control4"]
+margin_left = 96.0
+margin_right = 142.0
+margin_bottom = 40.0
+text = "3D"
+
+[node name="Transform" type="Control" parent="VBoxContainer"]
+visible = false
+margin_top = 264.0
+margin_right = 1024.0
+margin_bottom = 360.0
+rect_min_size = Vector2( 320, 96 )
+
+[node name="Label" type="Label" parent="VBoxContainer/Transform"]
+anchor_right = 0.25
+anchor_bottom = 0.25
+text = "Origin"
+align = 1
+valign = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer/Transform"]
+anchor_left = 0.25
+anchor_right = 0.5
+anchor_bottom = 0.25
+text = "Basis X"
+align = 1
+valign = 1
+
+[node name="Label3" type="Label" parent="VBoxContainer/Transform"]
+anchor_left = 0.5
+anchor_right = 0.75
+anchor_bottom = 0.25
+text = "Basis Y"
+align = 1
+valign = 1
+
+[node name="Label4" type="Label" parent="VBoxContainer/Transform"]
+anchor_left = 0.75
+anchor_right = 1.0
+anchor_bottom = 0.25
+text = "Basis Z"
+align = 1
+valign = 1
+
+[node name="OX" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_top = 0.25
+anchor_right = 0.25
+anchor_bottom = 0.5
+prefix = "X: "
+
+[node name="OY" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_top = 0.5
+anchor_right = 0.25
+anchor_bottom = 0.75
+prefix = "Y: "
+
+[node name="OZ" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_top = 0.75
+anchor_right = 0.25
+anchor_bottom = 1.0
+editable = false
+prefix = "Z: "
+
+[node name="XX" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_left = 0.25
+anchor_top = 0.25
+anchor_right = 0.5
+anchor_bottom = 0.5
+prefix = "X: "
+
+[node name="XY" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_left = 0.25
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.75
+prefix = "Y: "
+
+[node name="XZ" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_left = 0.25
+anchor_top = 0.75
+anchor_right = 0.5
+anchor_bottom = 1.0
+editable = false
+prefix = "Z: "
+
+[node name="YX" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_left = 0.5
+anchor_top = 0.25
+anchor_right = 0.75
+anchor_bottom = 0.5
+prefix = "X: "
+
+[node name="YY" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.75
+anchor_bottom = 0.75
+prefix = "Y: "
+
+[node name="YZ" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_left = 0.5
+anchor_top = 0.75
+anchor_right = 0.75
+anchor_bottom = 1.0
+editable = false
+prefix = "Z: "
+
+[node name="ZX" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_left = 0.75
+anchor_top = 0.25
+anchor_right = 1.0
+anchor_bottom = 0.5
+editable = false
+prefix = "X: "
+
+[node name="ZY" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_left = 0.75
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.75
+editable = false
+prefix = "Y: "
+
+[node name="ZZ" type="SpinBox" parent="VBoxContainer/Transform"]
+anchor_left = 0.75
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+editable = false
+prefix = "Z: "
+
+[connection signal="item_selected" from="VBoxContainer/Actor" to="." method="_on_Actor_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/Control3/ShowAtMode" to="." method="_on_ShowAtMode_item_selected"]
+[connection signal="toggled" from="VBoxContainer/Control4/use_transform" to="." method="_on_TransformCheckBox_toggled"]
+[connection signal="toggled" from="VBoxContainer/Control4/use_3d" to="." method="_on_3D_toggled"]

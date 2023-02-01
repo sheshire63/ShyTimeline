@@ -4,6 +4,7 @@ class_name TextEditT
 # changes that a tab key is used to switch focus instead of entering the letter
 # adds a autocomplete functionality if completion_list is not empty
 
+#todo different lists, one that adds a suffix and so
 export var completion_list: PoolStringArray = []
 export var suffix := ""#added to the completion
 export var prefix := ""
@@ -69,10 +70,7 @@ func add_completion(index := -1) -> void:
 	is_trying_completing = false
 	menu.hide()
 
-#todo:
-	#do auto complete
-		#the first word is not hovered
-		#pressing tab/enter will not complete it
+
 func _on_text_changed() -> void:
 	if completion_list:
 		hover_index = 0

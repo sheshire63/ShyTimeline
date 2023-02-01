@@ -33,8 +33,11 @@ var re_match := RegExMatch.new()
 
 func _ready() -> void:
 	if !event:
-		print("no event set in %s creating new event" % self)
+		print("no event set in %s creating new event for debug purpose" % self)
 		self.event = Event.new()
+	if !timeline:
+		print("no timeline set creating new one for debug purpose")
+		timeline = Timeline.new()
 	size_flags_horizontal = SIZE_EXPAND_FILL
 	size_flags_vertical = SIZE_SHRINK_CENTER
 	rect_min_size.y = 128

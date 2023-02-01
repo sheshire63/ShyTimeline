@@ -12,8 +12,8 @@ var timeline: Timeline
 
 
 func set_timeline(new: Timeline) -> void:
-	timeline = new
 	clear()
+	timeline = new
 	for i in timeline.actors:
 		add(timeline.actors[i], i)
 

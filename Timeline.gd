@@ -4,13 +4,22 @@ class_name Timeline
 
 signal connections_changed # used to inform the editor that the slots have changed
 
-export var events: Dictionary = {}
-export var actors := {} 
-export var variables := {}
-
+export var events: Dictionary
+export var actors: Dictionary
+export var variables: Dictionary
+	
 export var editor_pos := Vector2.ZERO
 export var editor_zoom := 1.0
 
+
+func _init() -> void:
+	#without this the dicts are somehow the same on new instances
+	if events == null:
+		events = {}
+	if actors == null:
+		actors = {}
+	if variables == null:
+		variables = {}
 
 # public ---------------------------------------------------------
 
