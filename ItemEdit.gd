@@ -4,7 +4,7 @@ extends Control
 signal request_delete
 signal request_move_up
 signal request_move_down
-signal request_save
+signal text_changed
 
 var changed := false
 onready var line := $LineEdit
@@ -38,10 +38,6 @@ func _on_Close_pressed() -> void:
 
 
 func _on_LineEdit_text_changed() -> void:
-	changed = true
 	rect_size.y = 32.0 + line.get_line_height() * line.get_line_count()
+	emit_signal("text_changed", line.text)
 
-
-func _on_LineEdit_focus_exited() -> void:
-	if changed:
-		emit_signal("request_save")

@@ -2,25 +2,31 @@ tool
 extends EventEdit
 
 onready var text := $TextEdit
-var changed = false
 
 func _ready() -> void:
 	text.text = get_line()
 
 
 func _on_TextEdit_text_changed() -> void:
-	changed = true
 	_update_size()
 
 
-func _on_TextEdit_focus_exited() -> void:
-	if changed:
-		set_line(text.text)
-		changed = false
 
+# override ----------------------------------------------------------------
 
 static func get_type() -> String:
 	return "Code"
+
+
+func get_code() -> String:
+	return text.text
+
+
+func parse(re_match: RegExMatch) -> void:
+	text.text = re_match.strings[0]
+
+
+# private ----------------------------------------------------------------
 
 
 func _update_size() -> void:

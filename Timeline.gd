@@ -7,7 +7,8 @@ signal connections_changed # used to inform the editor that the slots have chang
 export var events: Dictionary
 export var actors: Dictionary
 export var variables: Dictionary
-	
+
+
 export var editor_pos := Vector2.ZERO
 export var editor_zoom := 1.0
 
@@ -20,6 +21,7 @@ func _init() -> void:
 		actors = {}
 	if variables == null:
 		variables = {}
+
 
 # public ---------------------------------------------------------
 
@@ -71,3 +73,17 @@ func find_event_name(event) -> String:
 
 func update_nexts() -> void:
 	emit_signal("connections_changed")
+
+
+func save(path := "") -> void:
+	if !path:
+		path = resource_path
+	var err = ResourceSaver.save(path, self)#todo move to timeline and add loop for subresources
+	if err != OK:
+		print("error: '%s'failed to save timeline to '%s'" % [err, path])
+	for i in actors:
+		var actor = actors[i]
+		ResourceSaver.save(actor.resource_path, actor)
+	for i in events:
+		var event = events[i]
+		ResourceSaver.save(event.resource_path, event)

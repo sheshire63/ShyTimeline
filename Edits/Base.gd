@@ -17,7 +17,7 @@ export var show_slot_button := true setget _set_show_slot_button; func _set_show
 		slot_button.visible = true
 
 
-var event: Event
+var event: Resource
 var timeline: Timeline
 
 var label: Label
@@ -26,7 +26,6 @@ var remove_button: Button
 var move_up_button: Button
 var move_down_button: Button
 var bottom_box: HBoxContainer
-var re_match := RegExMatch.new()
 
 
 #todo we need a signal/function to remove the next entrys from event if we remove the line
@@ -35,6 +34,7 @@ func _ready() -> void:
 	if !event:
 		print("no event set in %s creating new event for debug purpose" % self)
 		self.event = Event.new()
+		event.editor_data.append({})
 	if !timeline:
 		print("no timeline set creating new one for debug purpose")
 		timeline = Timeline.new()
@@ -63,30 +63,37 @@ func get_line_number(pos := -1) -> int:
 	return pos
 
 
-func get_line(pos := -1) -> String:
-	if has_line(pos):
-		return event.lines[get_line_number(pos)]
-	else:
-		return ""
+func get_data(pos := -1) -> Dictionary:
+	pos = get_line_number(pos)
+	assert(has_line(pos))
+	return event.editor_data[pos]
 
 
-func set_line(line: String) -> void:
+func has_line(pos := -1) -> bool:
+	return pos < event.editor_data.size()
+
+
+func save_to_line() -> void:
 	if has_line():
-		event.lines[get_line_number()] = line
+		event.lines[get_line_number()] = get_code()
 	else:
-		event.lines.append(line)
-
-
-func has_line(pos:= -1) -> bool:
-	return event.lines.size() > get_line_number(pos)
+		event.lines.append(get_code())
 
 
 func try_parse(pos := -1) -> bool:
 	var re = RegEx.new()
 	var err = re.compile(get_regex())
 	assert(err == OK)
-	re_match = re.search(get_line(pos))
+	var re_match = re.search(get_line(pos))
+	parse(re_match)
 	return re_match != null
+
+
+func get_line(pos:= -1) -> String:
+	if has_line(pos):
+		return event.lines[pos]
+	else:
+		return ""
 
 
 #virtual ----------------------------------------------------------------
@@ -97,6 +104,14 @@ static func get_regex() -> String:
 
 static func get_type() -> String:
 	return "Error"
+
+
+func get_code() -> String:
+	return ""
+
+
+func parse(re_match: RegExMatch) -> void:
+	pass
 
 
 # private ----------------------------------------

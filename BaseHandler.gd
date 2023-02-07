@@ -32,15 +32,8 @@ var active_event: Event
 var current_line := 0
 
 
-var active_actor: Actor setget _set_active_actor; func _set_active_actor(actor: Actor) -> void:
-	active_actor = actor
-	_update_theme(actor.theme)
-var active_control: String setget _set_active_control; func _set_active_control(control: String) -> void:
-	active_control = control
-	_update_active_label(control)
-	_update_active_text(control)
-	_update_boxes(control)
-	_update_theme(active_actor.theme)
+var active_actor: Actor
+var active_control: String
 var active_label: Label
 var active_text: RichTextLabel
 var active_choice_box: Container
@@ -88,10 +81,6 @@ func handle(event: Event) -> void:
 	active_event = event
 	for line in event.get_line_size():
 		current_line = line
-		if line in event.controls:
-			self.active_control = event.controls[line]
-		if line in event.actors:
-			self.active_actor = event.actors[line]
 		var expression = ShyExpression.new()
 		expression.handle(event.lines[line], timeline.variables, self)
 		yield(expression, "completed")
@@ -123,6 +112,35 @@ func skip() -> void:
 		next()
 
 
+
+# functions for expressions ----------------------------------------------------------------
+
+func set_actor(actor: Actor) -> void:
+	undo.create_action("set_actor")
+	undo.add_do_property(self, "active_actor", actor)
+	undo.add_undo_property(self, "active_actor", active_actor)
+	undo.add_do_method(self, "_update_theme", actor.theme)
+	undo.add_undo_method(self, "_update_theme", active_actor.theme)
+	undo.commit_action()
+
+
+func set_control(control: String) -> void:
+	undo.create_action("set_control")
+	undo.add_do_property(self, "active_control", control)
+	undo.add_undo_property(self, "active_control", active_control)
+	undo.add_do_method(self, "_update_active_label", control)
+	undo.add_undo_method(self, "_update_active_label", active_control)
+	undo.add_do_method(self, "_update_active_text", control)
+	undo.add_undo_method(self, "_update_active_text", active_control)
+	undo.add_do_method(self, "_update_boxes", control)
+	undo.add_undo_method(self, "_update_boxes", active_control)
+	undo.add_do_method(self, "_update_theme", active_actor.theme)
+	undo.add_undo_method(self, "_update_theme", active_label.theme)
+	undo.commit_action()
+
+
+
+# private ----------------------------------------------------------------
 
 
 func _clear_box(box: Container) -> void:

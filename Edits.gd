@@ -6,16 +6,8 @@ extends Control
 
 const folder := "res://addons/ShyTimeline/Edits/"
 
-# : Timeline # definging timeline as type causes this to be null -.-
 var timeline: Timeline
-var event: Event setget _set_event; func _set_event(new):
-	if event != new:
-		if event and event.is_connected("changed", self, "edit_event"):
-			event.disconnect("changed", self, "edit_event")
-		if new:
-			new.connect("changed", self, "edit_event", [new, timeline])
-	event = new
-
+var event: Event
 var types := {}
 
 onready var box := $Scroll/Edits
@@ -40,15 +32,19 @@ func clear() -> void:
 	visible = false
 
 
+func setup() -> void:
+	clear()
+	name_edit.text = timeline.find_event_name(event)
+	for i in event.editor_data:
+		load_element(i.type)
+
+
 func edit_event(_event: Event, _timeline: Timeline) -> void:
 	assert(_timeline and _event)
 	clear()
 	timeline = _timeline
-	self.event = _event
-	name_edit.text = timeline.find_event_name(event)
-	for line in event.lines:
-		var type: String = line.left(line.find("("))
-		load_element(type)
+	event = _event
+	setup()
 	visible = true
 
 
@@ -56,9 +52,8 @@ func add_element(type) -> void:
 	if !event:
 		print("No event selected")
 		return
-	event.add_line("%s()" % type.to_lower())
-	# the change in event causes a refresh
-
+	event.editor_data.append({"type": type})
+	load_element(type)
 
 func load_element(type: String) -> void:
 	var element = types[type].instance() if type in types else code_edit.instance()
@@ -68,11 +63,6 @@ func load_element(type: String) -> void:
 func add_edit(edit: EventEdit) -> void:
 	assert(event)
 	edit.event = event
-	if !edit.try_parse(box.get_child_count()):
-		print("Unable to parse event")
-		edit.queue_free()
-		edit = code_edit.instance()
-		edit.event = event
 	edit.timeline = timeline
 	box.add_child(edit)
 

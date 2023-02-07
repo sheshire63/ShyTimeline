@@ -76,9 +76,7 @@ func _on_Save_pressed() -> void:
 
 
 func _on_SaveFileDialog_file_selected(path: String) -> void:
-	var err = ResourceSaver.save(path, timeline)
-	if err != OK:
-		print("error: '%s'failed to save timeline to '%s'" % [err, path])
+	timeline.save(path)
 
 
 func _on_timeline_changed() -> void:

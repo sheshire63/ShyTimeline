@@ -31,104 +31,144 @@ align = 1
 items = [ "Show/Hide", null, false, 0, null, "Hide", null, false, 1, null, "Show", null, false, 2, null ]
 selected = 0
 
-[node name="Control" type="Control" parent="VBoxContainer"]
+[node name="Animation" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 88.0
 margin_right = 1024.0
 margin_bottom = 128.0
 rect_min_size = Vector2( 0, 40 )
 
-[node name="use_animation" type="CheckBox" parent="VBoxContainer/Control"]
-anchor_right = 0.5
-anchor_bottom = 1.0
+[node name="Use" type="CheckBox" parent="VBoxContainer/Animation"]
+margin_right = 338.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Animation"
 
-[node name="Animation" type="OptionButton" parent="VBoxContainer/Control"]
-anchor_left = 0.5
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="ID" type="OptionButton" parent="VBoxContainer/Animation"]
+margin_left = 342.0
+margin_right = 681.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "n/a"
 
-[node name="Control2" type="Control" parent="VBoxContainer"]
+[node name="Wait" type="CheckBox" parent="VBoxContainer/Animation"]
+margin_left = 685.0
+margin_right = 1024.0
+margin_bottom = 40.0
+hint_tooltip = "Wait for the animation to finish"
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Wait"
+
+[node name="Layer" type="HBoxContainer" parent="VBoxContainer"]
 margin_top = 132.0
 margin_right = 1024.0
 margin_bottom = 172.0
 rect_min_size = Vector2( 0, 40 )
 
-[node name="use_pos" type="CheckBox" parent="VBoxContainer/Control2"]
-anchor_right = 0.5
-anchor_bottom = 1.0
-text = "Move To Node:"
-
-[node name="Position" type="LineEdit" parent="VBoxContainer/Control2"]
-anchor_left = 0.5
-anchor_right = 1.0
-anchor_bottom = 1.0
-caret_blink = true
-caret_blink_speed = 0.5
-
-[node name="Control3" type="Control" parent="VBoxContainer"]
-margin_top = 176.0
-margin_right = 1024.0
-margin_bottom = 216.0
-rect_min_size = Vector2( 0, 40 )
-
-[node name="use_layer" type="CheckBox" parent="VBoxContainer/Control3"]
-anchor_right = 0.333
-anchor_bottom = 1.0
+[node name="Use" type="CheckBox" parent="VBoxContainer/Layer"]
+margin_right = 338.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Show at"
 
-[node name="ShowAtMode" type="OptionButton" parent="VBoxContainer/Control3"]
-anchor_left = 0.333
-anchor_right = 0.666
-anchor_bottom = 1.0
+[node name="Mode" type="OptionButton" parent="VBoxContainer/Layer"]
+margin_left = 342.0
+margin_right = 681.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Front"
 items = [ "Front", null, false, 0, null, "Behind", null, false, 1, null, "Layer", null, false, 2, null ]
 selected = 0
 
-[node name="target" type="LineEdit" parent="VBoxContainer/Control3"]
-anchor_left = 0.666
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="ID" type="LineEdit" parent="VBoxContainer/Layer"]
+margin_left = 685.0
+margin_right = 1024.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 caret_blink = true
 caret_blink_speed = 0.5
 
-[node name="target2" type="SpinBox" parent="VBoxContainer/Control3"]
+[node name="Index" type="SpinBox" parent="VBoxContainer/Layer"]
 visible = false
 anchor_left = 0.666
 anchor_right = 1.0
 anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="Control4" type="Control" parent="VBoxContainer"]
-margin_top = 220.0
+[node name="Move" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 176.0
 margin_right = 1024.0
-margin_bottom = 260.0
+margin_bottom = 240.0
+rect_min_size = Vector2( 0, 64 )
+
+[node name="Use" type="CheckBox" parent="VBoxContainer/Move"]
+margin_right = 510.0
+margin_bottom = 64.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Move:"
+
+[node name="ID" type="LineEdit" parent="VBoxContainer/Move"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 64.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+placeholder_text = "Position ID"
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="Transform" type="HBoxContainer" parent="VBoxContainer"]
+visible = false
+margin_top = 244.0
+margin_right = 1024.0
+margin_bottom = 284.0
 rect_min_size = Vector2( 0, 40 )
 
-[node name="use_transform" type="CheckBox" parent="VBoxContainer/Control4"]
-margin_right = 92.0
+[node name="Use" type="CheckBox" parent="VBoxContainer/Transform"]
+margin_right = 338.0
 margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Transform"
 
-[node name="use_3d" type="CheckBox" parent="VBoxContainer/Control4"]
-margin_left = 96.0
-margin_right = 142.0
+[node name="Use3D" type="CheckBox" parent="VBoxContainer/Transform"]
+margin_left = 342.0
+margin_right = 681.0
 margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "3D"
 
-[node name="Transform" type="Control" parent="VBoxContainer"]
-visible = false
-margin_top = 264.0
+[node name="Transition" type="CheckBox" parent="VBoxContainer/Transform"]
+margin_left = 685.0
 margin_right = 1024.0
-margin_bottom = 360.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Transition"
+
+[node name="TransformData" type="Control" parent="VBoxContainer"]
+visible = false
+margin_top = 308.0
+margin_right = 1024.0
+margin_bottom = 404.0
 rect_min_size = Vector2( 320, 96 )
 
-[node name="Label" type="Label" parent="VBoxContainer/Transform"]
+[node name="Label" type="Label" parent="VBoxContainer/TransformData"]
 anchor_right = 0.25
 anchor_bottom = 0.25
 text = "Origin"
 align = 1
 valign = 1
 
-[node name="Label2" type="Label" parent="VBoxContainer/Transform"]
+[node name="Label2" type="Label" parent="VBoxContainer/TransformData"]
 anchor_left = 0.25
 anchor_right = 0.5
 anchor_bottom = 0.25
@@ -136,7 +176,7 @@ text = "Basis X"
 align = 1
 valign = 1
 
-[node name="Label3" type="Label" parent="VBoxContainer/Transform"]
+[node name="Label3" type="Label" parent="VBoxContainer/TransformData"]
 anchor_left = 0.5
 anchor_right = 0.75
 anchor_bottom = 0.25
@@ -144,7 +184,7 @@ text = "Basis Y"
 align = 1
 valign = 1
 
-[node name="Label4" type="Label" parent="VBoxContainer/Transform"]
+[node name="Label4" type="Label" parent="VBoxContainer/TransformData"]
 anchor_left = 0.75
 anchor_right = 1.0
 anchor_bottom = 0.25
@@ -152,40 +192,40 @@ text = "Basis Z"
 align = 1
 valign = 1
 
-[node name="OX" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="OX" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_top = 0.25
 anchor_right = 0.25
 anchor_bottom = 0.5
 prefix = "X: "
 
-[node name="OY" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="OY" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_top = 0.5
 anchor_right = 0.25
 anchor_bottom = 0.75
 prefix = "Y: "
 
-[node name="OZ" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="OZ" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_top = 0.75
 anchor_right = 0.25
 anchor_bottom = 1.0
 editable = false
 prefix = "Z: "
 
-[node name="XX" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="XX" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_left = 0.25
 anchor_top = 0.25
 anchor_right = 0.5
 anchor_bottom = 0.5
 prefix = "X: "
 
-[node name="XY" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="XY" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_left = 0.25
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.75
 prefix = "Y: "
 
-[node name="XZ" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="XZ" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_left = 0.25
 anchor_top = 0.75
 anchor_right = 0.5
@@ -193,21 +233,21 @@ anchor_bottom = 1.0
 editable = false
 prefix = "Z: "
 
-[node name="YX" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="YX" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_left = 0.5
 anchor_top = 0.25
 anchor_right = 0.75
 anchor_bottom = 0.5
 prefix = "X: "
 
-[node name="YY" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="YY" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.75
 anchor_bottom = 0.75
 prefix = "Y: "
 
-[node name="YZ" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="YZ" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_left = 0.5
 anchor_top = 0.75
 anchor_right = 0.75
@@ -215,7 +255,7 @@ anchor_bottom = 1.0
 editable = false
 prefix = "Z: "
 
-[node name="ZX" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="ZX" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_left = 0.75
 anchor_top = 0.25
 anchor_right = 1.0
@@ -223,7 +263,7 @@ anchor_bottom = 0.5
 editable = false
 prefix = "X: "
 
-[node name="ZY" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="ZY" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_left = 0.75
 anchor_top = 0.5
 anchor_right = 1.0
@@ -231,7 +271,7 @@ anchor_bottom = 0.75
 editable = false
 prefix = "Y: "
 
-[node name="ZZ" type="SpinBox" parent="VBoxContainer/Transform"]
+[node name="ZZ" type="SpinBox" parent="VBoxContainer/TransformData"]
 anchor_left = 0.75
 anchor_top = 0.75
 anchor_right = 1.0
@@ -239,7 +279,73 @@ anchor_bottom = 1.0
 editable = false
 prefix = "Z: "
 
+[node name="Transition" type="HBoxContainer" parent="VBoxContainer"]
+visible = false
+margin_top = 200.0
+margin_right = 1024.0
+margin_bottom = 240.0
+rect_min_size = Vector2( 0, 40 )
+
+[node name="Type" type="OptionButton" parent="VBoxContainer/Transition"]
+margin_right = 253.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "n/a"
+
+[node name="Ease" type="OptionButton" parent="VBoxContainer/Transition"]
+margin_left = 257.0
+margin_right = 510.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "n/a"
+
+[node name="Time" type="SpinBox" parent="VBoxContainer/Transition"]
+margin_left = 514.0
+margin_right = 767.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+suffix = "s"
+
+[node name="Wait" type="CheckBox" parent="VBoxContainer/Transition"]
+margin_left = 771.0
+margin_right = 1024.0
+margin_bottom = 40.0
+hint_tooltip = "Should it wait for the MoveTransition to finish."
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Wait"
+
+[connection signal="focus_exited" from="VBoxContainer" to="." method="_on_VBoxContainer_focus_exited"]
 [connection signal="item_selected" from="VBoxContainer/Actor" to="." method="_on_Actor_item_selected"]
-[connection signal="item_selected" from="VBoxContainer/Control3/ShowAtMode" to="." method="_on_ShowAtMode_item_selected"]
-[connection signal="toggled" from="VBoxContainer/Control4/use_transform" to="." method="_on_TransformCheckBox_toggled"]
-[connection signal="toggled" from="VBoxContainer/Control4/use_3d" to="." method="_on_3D_toggled"]
+[connection signal="item_selected" from="VBoxContainer/Show" to="." method="_on_Show_item_selected"]
+[connection signal="toggled" from="VBoxContainer/Animation/Use" to="." method="_on_Animation_Use_toggled"]
+[connection signal="item_selected" from="VBoxContainer/Animation/ID" to="." method="_on_Animation_ID_item_selected"]
+[connection signal="toggled" from="VBoxContainer/Animation/Wait" to="." method="_on_Animation_Wait_toggled"]
+[connection signal="toggled" from="VBoxContainer/Layer/Use" to="." method="_on_Layer_Use_toggled"]
+[connection signal="item_selected" from="VBoxContainer/Layer/Mode" to="." method="_on_ShowAtMode_item_selected"]
+[connection signal="text_changed" from="VBoxContainer/Layer/ID" to="." method="_on_Layer_ID_text_changed"]
+[connection signal="value_changed" from="VBoxContainer/Layer/Index" to="." method="_on_Layer_Index_value_changed"]
+[connection signal="toggled" from="VBoxContainer/Move/Use" to="." method="_on_Move_Use_toggled"]
+[connection signal="text_changed" from="VBoxContainer/Move/ID" to="." method="_on_Move_ID_text_changed"]
+[connection signal="toggled" from="VBoxContainer/Transform/Use" to="." method="_on_TransformCheckBox_toggled"]
+[connection signal="toggled" from="VBoxContainer/Transform/Use3D" to="." method="_on_3D_toggled"]
+[connection signal="toggled" from="VBoxContainer/Transform/Transition" to="." method="_on_Transition_toggled"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/OX" to="." method="_on_OX_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/OY" to="." method="_on_OY_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/OZ" to="." method="_on_OZ_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/XX" to="." method="_on_XX_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/XY" to="." method="_on_XY_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/XZ" to="." method="_on_XZ_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/YX" to="." method="_on_YX_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/YY" to="." method="_on_YY_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/YZ" to="." method="_on_YZ_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/ZX" to="." method="_on_ZX_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/ZY" to="." method="_on_ZY_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/TransformData/ZZ" to="." method="_on_ZZ_value_changed"]
+[connection signal="item_selected" from="VBoxContainer/Transition/Type" to="." method="_on_Type_item_selected"]
+[connection signal="item_selected" from="VBoxContainer/Transition/Ease" to="." method="_on_Ease_item_selected"]
+[connection signal="value_changed" from="VBoxContainer/Transition/Time" to="." method="_on_Transition_Time_value_changed"]
+[connection signal="toggled" from="VBoxContainer/Transition/Wait" to="." method="_on_Transition_Wait_toggled"]

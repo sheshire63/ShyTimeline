@@ -10,11 +10,11 @@ onready var chars := $GridContainer/Chars
 
 
 func _ready() -> void:
-	assert(re_match)
-	variable.text = re_match.get_string("variable")
-	default.text = re_match.get_string("default").c_unescape()
-	type.select(type.get_item_index(int(re_match.get_string("type"))))
-	chars.value = int(re_match.get_string("chars"))
+	var data = get_data()
+	variable.text = data.get("variable", "")
+	default.text = data.get("default", "")
+	type.select(data.get("var_type", 0))
+	chars.value = data.get("chars", -1)
 	if timeline:
 		variable.completion_list = timeline.variables.keys()
 
@@ -27,21 +27,28 @@ static func get_type() -> String:
 	return "Input"
 
 
+func parse(re_match: RegExMatch) -> void:
+	variable.text = re_match.get_string("variable")
+	default.text = re_match.get_string("default").c_unescape()
+	type.select(type.get_item_index(int(re_match.get_string("type"))))
+	chars.value = int(re_match.get_string("chars"))
+
+
 func _on_Variable_text_changed(new_text: String) -> void:
-	_update_line()
+	get_data().variable = new_text
 
 
 func _on_Default_text_changed(new_text: String) -> void:
-	_update_line()
+	get_data().default = new_text
 
 
 func _on_OptionButton_item_selected(index: int) -> void:
-	_update_line()
+	get_data().var_type = index
 
 
 func _on_Chars_value_changed(value: float) -> void:
-	_update_line()
+	get_data().chars = value
 
 
-func _update_line() -> void:
-	set_line('input(%s, "%s", %d, %d)' % [variable.text, default.text, type.get_selected_id(), chars.value])
+func get_code() -> String:
+	return 'input(%s, "%s", %d, %d)' % [variable.text, default.text, type.get_selected_id(), chars.value]

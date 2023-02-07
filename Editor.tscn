@@ -20,20 +20,14 @@ __meta__ = {
 anchor_right = 1.0
 margin_bottom = 40.0
 
-[node name="Add" type="Button" parent="Toolbar"]
-margin_right = 20.0
-margin_bottom = 40.0
-text = "+"
-
 [node name="New" type="Button" parent="Toolbar"]
-margin_left = 24.0
-margin_right = 64.0
+margin_right = 40.0
 margin_bottom = 40.0
 text = "New"
 
 [node name="Open" type="Button" parent="Toolbar"]
-margin_left = 68.0
-margin_right = 127.0
+margin_left = 44.0
+margin_right = 103.0
 margin_bottom = 40.0
 text = "Open..."
 
@@ -46,8 +40,8 @@ mode = 0
 filters = PoolStringArray( "*.res", "*.tres" )
 
 [node name="Save" type="Button" parent="Toolbar"]
-margin_left = 131.0
-margin_right = 184.0
+margin_left = 107.0
+margin_right = 160.0
 margin_bottom = 40.0
 text = "Save..."
 
@@ -59,10 +53,29 @@ window_title = "Save a Timeline"
 filters = PoolStringArray( "*.res", "*.tres" )
 
 [node name="Variables" type="Button" parent="Toolbar"]
-margin_left = 188.0
-margin_right = 270.0
+margin_left = 164.0
+margin_right = 246.0
 margin_bottom = 40.0
 text = "Variables..."
+
+[node name="Spacer" type="Control" parent="Toolbar"]
+margin_left = 250.0
+margin_right = 374.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.2
+
+[node name="Add" type="Button" parent="Toolbar"]
+margin_left = 378.0
+margin_right = 398.0
+margin_bottom = 40.0
+text = "+"
+
+[node name="Spacer2" type="Control" parent="Toolbar"]
+margin_left = 402.0
+margin_right = 1024.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
 
 [node name="HSplitContainer" type="HSplitContainer" parent="."]
 anchor_right = 1.0
@@ -75,6 +88,7 @@ margin_bottom = 560.0
 size_flags_horizontal = 3
 
 [node name="TabContainer" type="TabContainer" parent="HSplitContainer/HSplitContainer"]
+visible = false
 margin_right = 506.0
 margin_bottom = 560.0
 size_flags_horizontal = 3
@@ -92,7 +106,6 @@ rect_min_size = Vector2( 256, 0 )
 visible = false
 
 [node name="TimelineEdit" type="GraphEdit" parent="HSplitContainer/HSplitContainer"]
-margin_left = 518.0
 margin_right = 1024.0
 margin_bottom = 560.0
 size_flags_horizontal = 3
@@ -108,13 +121,13 @@ items = [ "Flow", null, 0, false, false, 0, 0, null, "", false ]
 
 [node name="Edit" parent="HSplitContainer" instance=ExtResource( 3 )]
 
-[connection signal="pressed" from="Toolbar/Add" to="." method="_on_Add_pressed"]
 [connection signal="pressed" from="Toolbar/New" to="." method="_on_New_pressed"]
 [connection signal="pressed" from="Toolbar/Open" to="Toolbar/Open/LoadFileDialog" method="popup_centered"]
 [connection signal="file_selected" from="Toolbar/Open/LoadFileDialog" to="." method="_on_FileDialog_file_selected"]
 [connection signal="pressed" from="Toolbar/Save" to="." method="_on_Save_pressed"]
 [connection signal="file_selected" from="Toolbar/Save/SaveFileDialog" to="." method="_on_SaveFileDialog_file_selected"]
 [connection signal="pressed" from="Toolbar/Variables" to="." method="_on_Variables_pressed"]
+[connection signal="pressed" from="Toolbar/Add" to="." method="_on_Add_pressed"]
 [connection signal="connection_from_empty" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_from_empty"]
 [connection signal="connection_request" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_request"]
 [connection signal="connection_to_empty" from="HSplitContainer/HSplitContainer/TimelineEdit" to="HSplitContainer/HSplitContainer/TimelineEdit" method="_on_TimelineEdit_connection_to_empty"]

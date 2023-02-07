@@ -109,26 +109,6 @@ func input(variable := "", default:= "", type := TYPE_STRING, max_chars := -1) -
 
 # sprites --------------------------------------------------
 
-
-func behind(actor := "", target_actor := "") -> void:
-	var target = _get_sprite(target_actor)
-	at(actor, target.z_index - 1)
-
-
-func front(actor := "", target_actor := "") -> void:
-	var target = _get_sprite(target_actor)
-	at(actor, target.z_index - 1)
-
-
-func at(actor := "", layer := 0) -> void:
-	layer = clamp(layer, -4096, 4096)
-	var sprite = _get_sprite(actor)
-	undo.create_action("set_layer")
-	undo.add_do_property(sprite, "z_index", layer)
-	undo.add_undo_property(sprite, "z_index", sprite.z_index)
-	undo.commit_action()
-
-
 func show(actor := "") -> void:
 	var sprite = _get_sprite(actor)
 	undo.create_action("show")
@@ -143,15 +123,6 @@ func hide(actor := "") -> void:
 	undo.add_do_property(sprite, "visible", false)
 	undo.add_undo_property(sprite, "visible", sprite.visible)
 	undo.commit_action()
-
-
-func transform(actor := "", transform = 1.0) -> void:
-	var sprite = _get_sprite(actor)
-	undo.create_action("transform")
-	undo.add_do_property(sprite, "transform", transform)
-	undo.add_undo_property(sprite, "transform", sprite.transform)
-	undo.commit_action()
-
 
 
 # trys to find and play the animation in AnimationPlayers first
@@ -175,30 +146,49 @@ func play(target := "", animation := "", wait := false) -> void:
 			yield(player, "animation_finished")
 
 
-func move(actor := "", position_id := "", offset := Vector2.ZERO, transition := -1, easing := 0, time := 1.0, wait := false) -> void:
+func behind(actor := "", target_actor := "") -> void:
+	var target = _get_sprite(target_actor)
+	at(actor, target.z_index - 1)
+
+
+func front(actor := "", target_actor := "") -> void:
+	var target = _get_sprite(target_actor)
+	at(actor, target.z_index - 1)
+
+
+func at(actor := "", layer := 0) -> void:
+	layer = clamp(layer, -4096, 4096)
+	var sprite = _get_sprite(actor)
+	undo.create_action("set_layer")
+	undo.add_do_property(sprite, "z_index", layer)
+	undo.add_undo_property(sprite, "z_index", sprite.z_index)
+	undo.commit_action()
+
+
+func move(actor := "", position_id := "", transform = null, transition := -1, easing := 0, time := 1.0, wait := false) -> void:
 	# transition is a Tween.TransitionType
 	var sprite = _get_sprite(actor)
 
 	var target_node: Node2D = _get_position(position_id)
 	var from_node: Node2D = sprite.get_parent()
+	var from = sprite.global_transform
+
 	undo.create_action("move")
 	undo.add_do_method(sprite.get_parent(), "remove_child", sprite)
 	undo.add_undo_method(sprite.get_parent(), "add_child", sprite)
 	undo.add_do_method(target_node, "add_child", sprite)
 	undo.add_undo_method(target_node, "remove_child", sprite)
-	undo.add_do_method(sprite, "position", offset)
-	undo.add_undo_method(sprite, "position", sprite.position)
+	if typeof(sprite.transform) == typeof(transform):
+		undo.add_do_method(sprite, "transform", transform)
+		undo.add_undo_method(sprite, "transform", sprite.transform)
 	undo.commit_action()
 
 	if transition >= 0:
-		var target = target_node.to_global(offset)
-		var result = sprite.transform
-
-		#set the sprite to its old position
-		sprite.transform = from_node.transform.xform(target.transform.affine_inverse().xform(sprite.transform))
+		var result = sprite.global_transform
+		sprite.global_transform = from
 
 		var tween = create_tween()
-		tween.tween_property(sprite, "transform", result, time)
+		tween.tween_property(sprite, "global_transform", result, time)
 		tween.set_trans(transition)
 		tween.set_ease(easing)
 		tween.play()

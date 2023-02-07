@@ -5,13 +5,20 @@ class_name Event
 # use emit_changed() to update graphNode and editView
 
 export var lines: PoolStringArray = [] as PoolStringArray
-export var actors := {} #linenumber as key
-export var controls := {} #linenumber as key
-export var next: Dictionary = {"next": [] as PoolStringArray} #"next", "choice[-1,..,x]", x(int for linenumber) value as poolstring array
+export var next: Dictionary #"next", "choice[-1,..,x]", x(int for linenumber) value as poolstring array
+
 export var editor_position := Vector2.ZERO setget _set_editor_position; func _set_editor_position(new) -> void:
 	editor_position = new
 	emit_changed()
+export var editor_data: Array
 
+
+
+func _init() -> void:
+	if next == null:
+		 next = {"next": [] as PoolStringArray}
+	if editor_data == null:
+		editor_data = []
 
 
 func get_line(id: int) -> String:
@@ -32,13 +39,11 @@ func get_line_count() -> int:
 	return lines.size()
 
 
-func add_line(line : String) -> void:
-	lines.append(line)
-	emit_changed()
-
-
 func remove_line(line : int) -> void:
-	lines.remove(line)
+	editor_data.remove(line)
+	if lines.size() > line:
+		lines.remove(line)
+	
 	var to_remove := []
 	for key in next:
 		if (key is int and key == line) or (key is String and key.begins_with(str(line))):
@@ -49,6 +54,8 @@ func remove_line(line : int) -> void:
 
 
 func set_line(text : String, id: int) -> void:
+	while lines.size() < id:
+		lines.append("")
 	lines[id] = text
 	emit_changed()
 
@@ -70,8 +77,6 @@ func has_slot_entry(key) -> bool:
 
 
 func switch_lines(a: int, b: int) -> void:#todo same for controls
-	_switch_entries_in_dict(a, b, actors)
-	_switch_entries_in_dict(a, b, controls)
 	_switch_entries_in_dict(a, b, next)
 
 	assert(lines.size() > a and lines.size() > b)

@@ -6,7 +6,7 @@
 [node name="Input" type="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_bottom = -400.0
+margin_bottom = -472.0
 rect_min_size = Vector2( 0, 128 )
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -68,7 +68,9 @@ margin_right = 992.0
 margin_bottom = 92.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+text = "String"
 items = [ "String", null, false, 4, null, "Integer", null, false, 2, null, "Float", null, false, 3, null ]
+selected = 0
 
 [node name="Label4" type="Label" parent="GridContainer"]
 margin_top = 101.0
