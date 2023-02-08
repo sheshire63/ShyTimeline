@@ -200,11 +200,12 @@ func _update_boxes(name: String) -> void:
 
 
 func _load_sprite_positions() -> void:
-	var node = get_node(sprite_positions_path)
-	if !node:
-		return
-	for i in node.get_children():
-		sprite_positions[i.name] = i
+	if sprite_positions_path:
+		var node = get_node(sprite_positions_path)
+		if !node:
+			return
+		for i in node.get_children():
+			sprite_positions[i.name] = i
 	var empty = Spatial.new() if use_3d_sprites else Node2D.new()
 	add_child(empty)
 	empty.global_position = Vector3.ZERO if use_3d_sprites else Vector2.ZERO
@@ -213,7 +214,9 @@ func _load_sprite_positions() -> void:
 
 func _load_sprites() -> void:
 	for i in timeline.actors:
-		_get_sprite(i).visible = false
+		var sprite = _get_sprite(i)
+		if sprite:
+			sprite.visible = false
 
 
 func _get_player(id := "") -> AnimationPlayer:

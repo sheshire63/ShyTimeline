@@ -10,12 +10,14 @@ script = ExtResource( 1 )
 [node name="New" type="Button" parent="."]
 anchor_right = 0.5
 margin_bottom = 40.0
+disabled = true
 text = "New"
 
 [node name="Load" type="Button" parent="."]
 anchor_left = 0.5
 anchor_right = 1.0
 margin_bottom = 40.0
+disabled = true
 text = "Load..."
 
 [node name="FileDialog" type="FileDialog" parent="Load"]

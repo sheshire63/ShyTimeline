@@ -3,13 +3,17 @@ extends Control
 
 onready var box := $ScrollContainer/VBoxContainer
 onready var add_line := $LineEdit
-var timeline: Timeline
-
-
-func set_timeline(new: Timeline) -> void:
-	timeline = new
+var timeline: Timeline setget _set_timeline; func _set_timeline(new: Timeline) -> void:
+	if timeline == new:
+		return
 	clear()
-	load_variables(timeline.variables)
+	timeline = new
+	if timeline:
+		add_line.editable = true
+		load_variables(timeline.variables)
+	else:
+		add_line.editable = false
+
 
 
 func clear() -> void:
@@ -19,7 +23,7 @@ func clear() -> void:
 
 func load_variables(variables: Dictionary) -> void:
 	for i in variables:
-		add(i, variables[i])
+		add(i, str(variables[i]))
 
 
 func add(var_name: String, value:= "") -> VarEdit:
@@ -43,6 +47,7 @@ func _on_var_changed(var_name: String, control: VarEdit) -> void:
 		control.disconnect("changed", self, "_on_var_changed")
 		control.connect("changed", self, "_on_var_changed", [new_name, control])
 	timeline.variables[new_name] = control.get_var()
+	print("mej")
 
 
 func _on_LineEdit_text_changed(new_text: String) -> void:

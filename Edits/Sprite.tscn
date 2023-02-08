@@ -130,35 +130,37 @@ margin_top = 244.0
 margin_right = 1024.0
 margin_bottom = 284.0
 rect_min_size = Vector2( 0, 40 )
+custom_constants/separation = 40
+
+[node name="Spacer" type="Control" parent="VBoxContainer/Transform"]
+margin_bottom = 40.0
 
 [node name="Use" type="CheckBox" parent="VBoxContainer/Transform"]
-margin_right = 338.0
+margin_left = 40.0
+margin_right = 132.0
 margin_bottom = 40.0
-size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Transform"
 
 [node name="Use3D" type="CheckBox" parent="VBoxContainer/Transform"]
-margin_left = 342.0
-margin_right = 681.0
+margin_left = 172.0
+margin_right = 218.0
 margin_bottom = 40.0
-size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "3D"
 
 [node name="Transition" type="CheckBox" parent="VBoxContainer/Transform"]
-margin_left = 685.0
-margin_right = 1024.0
+margin_left = 258.0
+margin_right = 349.0
 margin_bottom = 40.0
-size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Transition"
 
 [node name="TransformData" type="Control" parent="VBoxContainer"]
 visible = false
-margin_top = 308.0
+margin_top = 288.0
 margin_right = 1024.0
-margin_bottom = 404.0
+margin_bottom = 384.0
 rect_min_size = Vector2( 320, 96 )
 
 [node name="Label" type="Label" parent="VBoxContainer/TransformData"]

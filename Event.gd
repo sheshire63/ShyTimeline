@@ -43,7 +43,7 @@ func remove_line(line : int) -> void:
 	editor_data.remove(line)
 	if lines.size() > line:
 		lines.remove(line)
-	
+
 	var to_remove := []
 	for key in next:
 		if (key is int and key == line) or (key is String and key.begins_with(str(line))):
@@ -57,6 +57,11 @@ func set_line(text : String, id: int) -> void:
 	while lines.size() < id:
 		lines.append("")
 	lines[id] = text
+	emit_changed()
+
+
+func set_lines(_lines: PoolStringArray) -> void:
+	lines = _lines
 	emit_changed()
 
 

@@ -1,5 +1,5 @@
 tool
-extends Control
+extends HBoxContainer
 class_name VarEdit
 
 signal changed
@@ -7,49 +7,84 @@ signal on_delete
 
 var name_line := LineEdit.new()
 var type := OptionButton.new()
-var default := LineEdit.new()
+var default_line := LineEdit.new()
+var default_int := SpinBox.new()
+var default_float := SpinBox.new()
+var default_bool := CheckButton.new()
 var close := Button.new()
 
 
 func _ready() -> void:
-	name_line.anchor_bottom = 1.0
-	name_line.anchor_right = 0.4
+	name_line.size_flags_horizontal = SIZE_EXPAND_FILL
 	name_line.connect("text_changed", self, "_on_changed")
 	add_child(name_line)
-	
-	type.anchor_bottom = 1.0
-	type.anchor_left = 0.4
-	type.anchor_right = 0.6
+
+	type.size_flags_horizontal = SIZE_EXPAND_FILL
 	add_child(type)
 	type.add_item("String", TYPE_STRING)
 	type.add_item("Integer", TYPE_INT)
 	type.add_item("Float", TYPE_REAL)
 	type.add_item("Boolean", TYPE_BOOL)
 	type.connect("item_selected", self, "_on_changed")
-	
-	default.anchor_bottom = 1.0
-	default.anchor_left = 0.6
-	default.anchor_right = 1.0
-	default.margin_right = -32.0
-	default.connect("text_changed", self, "_on_changed")
-	add_child(default)
+	type.select(0)
+
+	default_bool.size_flags_horizontal = SIZE_EXPAND_FILL
+	default_bool.connect("toggled", self, "_on_changed")
+	default_bool.visible = false
+	add_child(default_bool)
+
+	default_int.size_flags_horizontal = SIZE_EXPAND_FILL
+	default_int.connect("value_changed", self, "_on_changed")
+	default_int.visible = false
+	add_child(default_int)
+
+	default_float.size_flags_horizontal = SIZE_EXPAND_FILL
+	default_float.connect("value_changed", self, "_on_changed")
+	default_float.visible = false
+	add_child(default_float)
+
+	default_line.size_flags_horizontal = SIZE_EXPAND_FILL
+	default_line.connect("text_changed", self, "_on_changed")
+	add_child(default_line)
 
 	close.text = "X"
-	close.anchor_left = 1.0
-	close.margin_left = -32.0
-	close.margin_bottom = 32.0
 	close.connect("pressed", self, "_on_close")
 	add_child(close)
 
 
 func set_var(var_name: String, default_value) -> void:
 	name_line.text = var_name
-	type.select(type.get_item_index(typeof(default_value)))
-	default.text = str(default_value)
+	var t = typeof(default_value)
+	type.select(type.get_item_index(t))
+	default_line.visible = false
+	default_float.visible = false
+	default_int.visible = false
+	default_bool.visible = false
+	match t:
+		TYPE_STRING:
+			default_line.text = default_value
+			default_line.visible = true
+		TYPE_INT:
+			default_int.value = default_value
+			default_int.visible = true
+		TYPE_REAL:
+			default_float.value = default_value
+			default_float.visible = true
+		TYPE_BOOL:
+			default_bool.pressed = default_value
+			default_bool.visible = true
 
 
 func get_var():
-	return convert(default.text, type.get_selected_id())
+	match type.get_selected_id():
+		TYPE_STRING:
+			return default_line.text
+		TYPE_INT:
+			return int(default_int.value)
+		TYPE_REAL:
+			return default_float.value
+		TYPE_BOOL:
+			return default_bool.pressed
 
 
 func get_var_name() -> String:

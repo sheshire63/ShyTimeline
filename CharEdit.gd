@@ -7,15 +7,22 @@ const CharControl := preload("res://addons/ShyTimeline/CharControl.tscn")
 
 onready var load_dialog := $Load/FileDialog
 onready var box := $VBoxContainer
+onready var new_button := $New
+onready var load_button := $Load
 
-var timeline: Timeline
-
-
-func set_timeline(new: Timeline) -> void:
+var timeline: Timeline setget _set_timeline; func _set_timeline(new: Timeline) -> void:
+	if timeline == new:
+		return
 	clear()
 	timeline = new
-	for i in timeline.actors:
-		add(timeline.actors[i], i)
+	if timeline:
+		new_button.disabled = false
+		load_button.disabled = false
+		for i in timeline.actors:
+			add(timeline.actors[i], i)
+	else:
+		new_button.disabled = true
+		load_button.disabled = true
 
 
 func clear() -> void:

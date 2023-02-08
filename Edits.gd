@@ -40,6 +40,8 @@ func setup() -> void:
 
 
 func edit_event(_event: Event, _timeline: Timeline) -> void:
+	if event:
+		compile()
 	assert(_timeline and _event)
 	clear()
 	timeline = _timeline
@@ -82,6 +84,12 @@ func load_types() -> void:
 	for i in types:
 		menu.add_item(i.capitalize())
 
+
+func compile() -> void:
+	var lines: PoolStringArray = []
+	for i in box.get_children():
+		lines.append(i.get_code())
+	event.set_lines(lines)
 
 # private ---------------------------------------------------------------------
 

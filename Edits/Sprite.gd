@@ -39,7 +39,8 @@ onready var basis_z_x := $VBoxContainer/TransformData/ZX
 onready var basis_z_y := $VBoxContainer/TransformData/ZY
 onready var basis_z_z := $VBoxContainer/TransformData/ZZ
 
-
+#todo clean this up
+# move the transform controls in an array/dict to reduce copied code
 
 
 func _ready() -> void:
