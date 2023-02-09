@@ -14,7 +14,7 @@ func _ready() -> void:
 # override ----------------------------------------------------------------
 
 static func get_regex() -> String:
-	return 'text\\((?:["\'](?<text>(?:[^\'"]|\\\\\\.)*)["\'])?\\)'
+	return '(?:set_actor\\(["\'](?<actor>.*)["\']\\)\\.)?text\\((?:["\'](?<text>(?:[^\'"]|\\\\\\.)*)["\'])?\\)'
 
 
 static func get_type() -> String:
@@ -22,13 +22,15 @@ static func get_type() -> String:
 
 
 func parse(re_match: RegExMatch) -> void:
-	if get_line_number() in event.actors:
-		text.text += event.actors[get_line_number()] + ", "
-	if text.text:
-		text.text += "@"
+	var text = ""
+	text += re_match.get_string("actor")
+	if text:
+		text += "@"
 
 	if re_match:
-		text.text += re_match.get_string("text")
+		text += re_match.get_string("text")
+
+	text.text = text
 
 
 func get_code() -> String:
@@ -40,7 +42,7 @@ func get_code() -> String:
 	if re_match:
 		line = "text(\"%s\")" % re_match.get_string("text").c_escape()
 		if re_match.get_string("actors"):
-			line = "set_actor(%s); " % re_match.get_string("actors") + line
+			line = 'set_actor("%s").' % re_match.get_string("actors").c_escape() + line
 	else:
 		line = text.text.c_escape()
 	return line

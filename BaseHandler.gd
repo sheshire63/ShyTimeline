@@ -11,6 +11,7 @@ export(NodePath) var sprite_positions_path := ""
 export var load_sprites_at_ready := true
 export var use_3d_sprites := false
 export var default_z_index := 0
+export var hide_controls := false
 
 export(Resource) var timeline = Timeline.new()
 export var start := "start"
@@ -33,16 +34,14 @@ var current_line := 0
 
 
 var active_actor: Actor
-var active_control: String
-var active_label: Label
-var active_text: RichTextLabel
-var active_choice_box: Container
-var active_input_box: Container
+var active_control := ""
 var yield_queue := []
+var theme = Theme.new()
 
 
 
 func _ready() -> void:
+	theme.copy_default_theme()
 	text_boxes = _load_nodes_into_dict(text_boxes_paths, RichTextLabel)
 	labels = _load_nodes_into_dict(labels_paths, Label)
 	choice_boxes = _load_nodes_into_dict(choice_boxes_paths, Container)
@@ -51,12 +50,6 @@ func _ready() -> void:
 	_load_sprite_positions()
 	if load_sprites_at_ready:
 		_load_sprites()
-	if text_boxes:
-		active_text = text_boxes.values()[0]
-	if choice_boxes:
-		active_choice_box = choice_boxes.values()[0]
-	if input_boxes:
-		active_input_box = input_boxes.values()[0]
 	if !Engine.editor_hint:
 		queue_event(start)
 		next()
@@ -115,28 +108,23 @@ func skip() -> void:
 
 # functions for expressions ----------------------------------------------------------------
 
-func set_actor(actor: Actor) -> void:
+func set_actor(actor_id := ""):
+	var actor = _get_actor(actor_id)
 	undo.create_action("set_actor")
-	undo.add_do_property(self, "active_actor", actor)
-	undo.add_undo_property(self, "active_actor", active_actor)
-	undo.add_do_method(self, "_update_theme", actor.theme)
-	undo.add_undo_method(self, "_update_theme", active_actor.theme)
+	undo.add_do_method(self, "_set_actor", actor)
+	undo.add_undo_method(self, "_set_actor", active_actor)
 	undo.commit_action()
+	return self
 
 
-func set_control(control: String) -> void:
+func set_control(control := ""):
 	undo.create_action("set_control")
-	undo.add_do_property(self, "active_control", control)
-	undo.add_undo_property(self, "active_control", active_control)
-	undo.add_do_method(self, "_update_active_label", control)
-	undo.add_undo_method(self, "_update_active_label", active_control)
-	undo.add_do_method(self, "_update_active_text", control)
-	undo.add_undo_method(self, "_update_active_text", active_control)
-	undo.add_do_method(self, "_update_boxes", control)
-	undo.add_undo_method(self, "_update_boxes", active_control)
-	undo.add_do_method(self, "_update_theme", active_actor.theme)
-	undo.add_undo_method(self, "_update_theme", active_label.theme)
+
+	undo.add_do_method(self, "_set_control", control)
+	undo.add_undo_method(self, "_set_control", active_control)
+
 	undo.commit_action()
+	return self
 
 
 
@@ -155,6 +143,10 @@ func _load_nodes_into_dict(paths: Array, type = null) -> Dictionary:
 		if i:
 			var new = get_node(i)
 			if new:
+				if !dict:
+					dict[""] = new
+				elif hide_controls:
+					new.visible = false
 				if (type and new is type) or !type:
 					dict[new.name] = new
 				else:
@@ -166,37 +158,35 @@ func _load_nodes_into_dict(paths: Array, type = null) -> Dictionary:
 	return dict
 
 
-func _update_theme(theme: Theme) -> void:
-	active_label.theme = theme
-	active_choice_box.theme = theme
-	active_input_box.theme = theme
+func _set_control(id := "") -> void:
+	if hide_controls:
+		_get_text().visible = false
+		_get_label().visible = false
+		_get_choice().visible = false
+		_get_input().visible = false
 
+	active_control = id
 
-func _update_active_label(label: String) -> void:
-	active_label.visible = false
-	if label in labels:
-		active_label = labels[label]
-		active_label.text = active_actor.name
-		active_label.visible = true
+	var text = _get_text()
+	if text:
+		text.visible = true
+		text.theme = theme
 
+	var label =_get_label()
+	if label:
+		label.visible = true
+		label.theme = theme
+		label.text = active_actor.name if active_actor else ""
 
-func _update_active_text(name: String) -> void:
-	active_text.visible = false
-	if name in text_boxes:
-		active_text = text_boxes[name]
-		active_text.bbcode_text = ""
-		active_text.visible = true
+	var choice = _get_choice()
+	if choice:
+		choice.visible = true
+		choice.theme = theme
 
-
-func _update_boxes(name: String) -> void:
-	active_choice_box.visible = false
-	active_input_box.visible = false
-	_clear_box(active_choice_box)
-	_clear_box(active_input_box)
-	if name in choice_boxes:
-		active_choice_box = choice_boxes[name]
-	if name in input_boxes:
-		active_input_box = input_boxes[name]
+	var input =_get_input()
+	if input:
+		input.visible = true
+		input.theme = theme
 
 
 func _load_sprite_positions() -> void:
@@ -248,8 +238,47 @@ func _get_actor(id:String) -> Actor:
 	return timeline.actors.get(id)
 
 
+func _set_actor(actor: Actor) -> void:
+	active_actor = actor
+	if actor and actor.theme:
+		theme.merge_with(actor.theme)
+	var label = _get_label()
+	label.text = actor.name if actor else ""
+	label.visible = true
+
+
 func _get_position(id := "") -> Node:
 	if id in sprite_positions:
 		return sprite_positions[id]
 	else:
 		return sprite_positions[""]
+
+
+func _get_label(id := "") -> Label:
+	if id:
+		return labels.get(id)
+	else:
+		return labels.get(active_control)
+
+
+
+func _get_text(id := "") -> RichTextLabel:
+	if id:
+		return text_boxes.get(id)
+	else:
+		return text_boxes.get(active_control)
+
+
+
+func _get_choice(id := "") -> Container:
+	if id:
+		return choice_boxes.get(id)
+	else:
+		return choice_boxes.get(active_control)
+
+
+func _get_input(id := "") -> Container:
+	if id:
+		return input_boxes.get(id)
+	else:
+		return input_boxes.get(active_control)
