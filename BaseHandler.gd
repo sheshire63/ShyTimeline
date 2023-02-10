@@ -76,7 +76,8 @@ func handle(event: Event) -> void:
 		current_line = line
 		var expression = ShyExpression.new()
 		expression.handle(event.lines[line], timeline.variables, self)
-		yield(expression, "completed")
+		if expression.is_running:
+			yield(expression, "completed")
 
 	for i in event.get_next("next"):
 		queue_event(i)

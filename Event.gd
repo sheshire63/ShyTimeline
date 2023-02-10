@@ -84,10 +84,11 @@ func has_slot_entry(key) -> bool:
 func switch_lines(a: int, b: int) -> void:#todo same for controls
 	_switch_entries_in_dict(a, b, next)
 
-	assert(lines.size() > a and lines.size() > b)
-	var a_value = lines[a]
-	lines[a] = lines[b]
-	lines[b] = a_value
+	assert(editor_data.size() > a and editor_data.size() > b)
+
+	var a_value = editor_data[a]
+	editor_data[a] = editor_data[b]
+	editor_data[b] = a_value
 
 	var next_entries := []
 	var re = RegEx.new()

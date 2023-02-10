@@ -199,8 +199,8 @@ func move(actor := "", position_id := "", transform = null, transition := -1, ea
 	undo.add_do_method(target_node, "add_child", sprite)
 	undo.add_undo_method(target_node, "remove_child", sprite)
 	if typeof(sprite.transform) == typeof(transform):
-		undo.add_do_method(sprite, "transform", transform)
-		undo.add_undo_method(sprite, "transform", sprite.transform)
+		undo.add_do_property(sprite, "transform", transform)
+		undo.add_undo_property(sprite, "transform", sprite.transform)
 	undo.commit_action()
 
 	if transition >= 0:

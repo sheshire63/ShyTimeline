@@ -9,7 +9,7 @@ var regex_sections := RegEx.new()
 
 var variables: Dictionary
 var instance: Object
-
+var is_running := false
 
 
 func _init() -> void:
@@ -22,6 +22,7 @@ func _init() -> void:
 
 
 func handle(line: String, vars := {}, inst = null) -> void:
+	is_running = true
 	variables = vars
 	instance = inst
 	line = solve_bracket(line)
@@ -35,6 +36,7 @@ func handle(line: String, vars := {}, inst = null) -> void:
 	else:
 		printerr("parse failed: Line %s" % line)
 	emit_signal("completed")
+	is_running = false
 
 
 func solve_bracket(string: String) -> String:

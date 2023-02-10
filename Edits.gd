@@ -57,6 +57,7 @@ func add_element(type) -> void:
 	event.editor_data.append({"type": type})
 	load_element(type)
 
+
 func load_element(type: String) -> void:
 	var element = types[type].instance() if type in types else code_edit.instance()
 	add_edit(element)

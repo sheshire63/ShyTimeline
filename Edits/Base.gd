@@ -40,7 +40,6 @@ func _ready() -> void:
 		timeline = Timeline.new()
 	size_flags_horizontal = SIZE_EXPAND_FILL
 	size_flags_vertical = SIZE_SHRINK_CENTER
-	rect_min_size.y = 128
 	_add_label()
 	_add_remove_button()
 	_add_bottom_box()
@@ -149,7 +148,8 @@ func _add_remove_button() -> void:
 	remove_button.connect("pressed", self, "remove")
 	add_child(remove_button)
 	remove_button.anchor_left = 1.0
-	remove_button.margin_left = - remove_button.rect_size.x
+	remove_button.margin_left = -40
+	remove_button.margin_bottom = 40
 
 
 func _add_label() -> void:
@@ -170,8 +170,10 @@ func _add_move_buttons() -> void:
 	move_up_button.text = "^"
 	move_up_button.anchor_left = 1.0
 	move_up_button.margin_left = -40
-	move_up_button.margin_bottom = 40
+	move_up_button.margin_bottom = 80
+	move_up_button.margin_top = 40
 	move_up_button.connect("pressed", self, "_on_move_up_pressed")
+	add_child(move_up_button)
 
 	move_down_button = Button.new()
 	move_down_button.text = "v"
@@ -180,15 +182,18 @@ func _add_move_buttons() -> void:
 	move_down_button.margin_left = -40
 	move_down_button.margin_top = -40
 	move_down_button.connect("pressed", self, "_on_move_down_pressed")
+	add_child(move_down_button)
 
 
 func _on_move_down_pressed() -> void:
 	var pos = get_line_number()
-	if pos < event.get_line_count():
+	if pos < event.get_line_count() - 1:
 		event.switch_lines(pos, pos + 1)
+		get_parent().move_child(self, pos + 1)
 
 
 func _on_move_up_pressed() -> void:
 	var pos = get_line_number()
 	if pos > 0:
 		event.switch_lines(pos, pos - 1)
+		get_parent().move_child(self, pos - 1)

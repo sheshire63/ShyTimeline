@@ -1,4 +1,7 @@
+tool
 extends EventEdit
+
+onready var box := $VBoxContainer
 
 onready var show := $VBoxContainer/Show
 onready var actor := $VBoxContainer/Actor
@@ -44,12 +47,18 @@ onready var basis_z_z := $VBoxContainer/TransformData/ZZ
 
 
 func _ready() -> void:
+	transition_ease.clear()
 	for i in ClassDB.class_get_enum_constants("Tween", "EaseType"):
 		transition_ease.add_item(i)
+
+	transition_type.clear()
 	for i in ClassDB.class_get_enum_constants("Tween", "TransitionType"):
 		transition_type.add_item(i)
+
+	actor.clear()
 	for i in timeline.actors:
 		actor.add_item(i)
+
 	_load_data()
 
 
@@ -62,7 +71,7 @@ func _load_data() -> void:
 	use_animation.pressed = data.get("use_animation", false)
 	var sprite = _get_sprite()
 	if sprite:
-		animation.select(sprite.get_animation_list().find(data.get("animation", "")))
+		animation.select(sprite.get_animation_names().find(data.get("animation", "")))
 	animation_wait.pressed = data.get("animation_wait", false)
 
 	use_layer.pressed = data.get("use_layer", false)
@@ -210,6 +219,10 @@ func _on_3D_toggled(button_pressed: bool) -> void:
 	basis_z_z.editable = button_pressed
 
 
+static func get_type() -> String:
+	return "Sprite"
+
+#todo the appending via . does not work we might get a function state back because of yield
 func get_code() -> String:
 	var line := ""
 	var actor_id: String = timeline.actors.keys()[actor.selected]
@@ -223,9 +236,6 @@ func get_code() -> String:
 	if use_animation.pressed:
 		line += 'play("%s", "%s", %s).' % [actor_id.c_escape(), timeline.actors[actor_id].sprite.get_animation_list()[animation.selected].c_escape(), str(animation_wait.pressed)]
 
-	if use_move.pressed:
-		line += 'position("%s", "%s").' % [actor_id.c_escape(), move_id.text.c_escape()]
-
 	if use_layer.pressed:
 		match layer_mode.selected:
 			0:#Front
@@ -238,26 +248,26 @@ func get_code() -> String:
 	if use_transform.pressed:
 		var transform := ""
 		if transform_use_3d.pressed:
-			transform = 'Transform(Vector3(%r, %r, %r), Vector3(%r, %r, %r), Vector3(%r, %r, %r), Vector3(%r, %r, %r))' % [
+			transform = 'Transform(Vector3(%f, %f, %f), Vector3(%f, %f, %f), Vector3(%f, %f, %f), Vector3(%f, %f, %f))' % [
 					basis_x_x.value, basis_x_y.value, basis_x_z.value,
 					basis_y_x.value, basis_y_y.value, basis_y_z.value,
 					basis_z_x.value, basis_z_y.value, basis_z_z.value,
 					origin_x.value, origin_y.value, origin_z.value
 				]
 		else:
-			transform = 'Transfrom2D(Vector2(%r, %r), Vector2(%r, %r), Vector2(%r, %r))' % [
+			transform = 'Transform2D(Vector2(%f, %f), Vector2(%f, %f), Vector2(%f, %f))' % [
 					basis_x_x.value, basis_x_y.value,
 					basis_y_x.value, basis_y_y.value,
 					origin_x.value, origin_y.value
 				]
-		line += 'move("%s", "%s", %s, %d, %d, %r, %b).' % [
+		line += 'move("%s", "%s", %s, %d, %d, %f, %s).' % [
 				actor_id.c_escape(),
 				move_id.text.c_escape(),
 				transform if use_transform.pressed else -1,
 				transition_type.selected,
 				transition_ease.selected,
 				transition_time.value,
-				transition_wait.pressed
+				str(transition_wait.pressed).to_lower()
 			]
 	line = line.trim_suffix(".")
 	return line
@@ -275,6 +285,9 @@ func _on_Actor_item_selected(index: int) -> void:
 func _on_Move_Use_toggled(button_pressed: bool) -> void:
 	get_data().use_move = button_pressed
 	transforms.visible = button_pressed
+	use_transform.pressed = false
+	transform_use_3d.pressed = false
+	use_transition.pressed = false
 
 
 func _create_regex(segments := {}) -> RegEx:
@@ -424,3 +437,8 @@ func _on_Transition_Time_value_changed(value: float) -> void:
 
 func _on_Transition_Wait_toggled(button_pressed: bool) -> void:
 	get_data().transition_wait = button_pressed
+
+
+func _on_VBoxContainer_resized() -> void:
+	if box:
+		rect_min_size.y = box.rect_size.y + 80.0
