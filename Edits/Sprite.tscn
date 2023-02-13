@@ -160,9 +160,9 @@ text = "Transition"
 
 [node name="TransformData" type="Control" parent="VBoxContainer"]
 visible = false
-margin_top = 288.0
-margin_right = 1024.0
-margin_bottom = 384.0
+margin_top = 244.0
+margin_right = 984.0
+margin_bottom = 340.0
 rect_min_size = Vector2( 320, 96 )
 
 [node name="Label" type="Label" parent="VBoxContainer/TransformData"]
