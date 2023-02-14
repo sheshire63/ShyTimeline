@@ -6,6 +6,7 @@ signal completed
 
 var regex_brackets := RegEx.new()
 var regex_sections := RegEx.new()
+var regex_lines := RegEx.new()
 
 var variables: Dictionary
 var instance: Object
@@ -18,6 +19,8 @@ func _init() -> void:
 	assert(err == OK)
 	err = regex_sections.compile("^(?:(?<condition>.*?)\\?)?(?<value>.*?)(?::(?<weight>.*?))?(?:!(?<next>.*?))?$")
 	assert(err == OK)
+	err = regex_lines.compile("(?<line>(?<rec>[^{}]|{\\g'rec'}|\\\\.)*?)(?:$|(?!\\\\);)")
+	assert(err == OK)
 
 
 
@@ -26,15 +29,17 @@ func handle(line: String, vars := {}, inst = null) -> void:
 	variables = vars
 	instance = inst
 	line = solve_bracket(line)
-
-	if parse(line, variables.keys()) == OK:
-		var result = execute(variables.values(), instance, false)
-		if result is GDScriptFunctionState and result.is_valid():
-			yield(result, "completed")
-		if has_execute_failed():
-			printerr("execute_failed: Line %s" % line)
-	else:
-		printerr("parse failed: Line %s" % line)
+	#todo execute all lines simultanious and then wait for completion of all
+	for i in regex_lines.search_all(line):
+		var subline = i.get_string("line")
+		if parse(subline, variables.keys()) == OK:
+			var result = execute(variables.values(), instance, false)
+			if result is GDScriptFunctionState and result.is_valid():
+				yield(result, "completed")
+			if has_execute_failed():
+				printerr("execute_failed: Line %s" % subline)
+		else:
+			printerr("parse failed: Line %s" % subline)
 	emit_signal("completed")
 	is_running = false
 

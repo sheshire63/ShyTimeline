@@ -28,16 +28,15 @@ it is recommended to use a yield so the handler event waits.
 i recommend to have default values for all arguments
 """
 
-func wait(time := 1.0):
+func wait(time := 1.0) -> void:
 	yield(get_tree().create_timer(time), "timeout")
-	return self
 
 
-func text(string := "", flush:= true):
+func text(string := "", flush:= true) -> void:
 	var text = _get_text()
 	if !text:
 		print("no Textbox set")
-		return self
+		return
 	text.visible = true
 	var old_text: String = text.bbcode_text
 	if flush:
@@ -69,14 +68,13 @@ func text(string := "", flush:= true):
 		var label = _get_label()
 		if label:
 			label.visible = false
-	return self
 
 
-func choice(choices := [] , time := 0.0):
+func choice(choices := [] , time := 0.0) -> void:
 	var choice = _get_choice()
 	if !choice:
 		print("No active choice box")
-		return self
+		return
 
 	undo.create_action("Choice")
 	undo.add_do_method(self, "_clear_boxes")
@@ -92,14 +90,13 @@ func choice(choices := [] , time := 0.0):
 	yield(self, "choice_end")
 	choice_timer.stop()
 	_clear_box(choice)
-	return self
 
 
-func input(variable := "", default:= "", type := TYPE_STRING, max_chars := -1):
+func input(variable := "", default:= "", type := TYPE_STRING, max_chars := -1) -> void:
 	var input = _get_input()
 	if !input:
 		print("No active input box")
-		return self
+		return
 
 	var line_edit = LineEdit.new()
 	if max_chars >= 0:
@@ -116,35 +113,32 @@ func input(variable := "", default:= "", type := TYPE_STRING, max_chars := -1):
 
 	yield(line_edit, "text_entered")
 	_clear_box(input)
-	return self
 
 
 # sprites --------------------------------------------------
 
-func show(actor := ""):
+func show(actor := "") -> void:
 	var sprite = _get_sprite(actor)
 	if sprite:
 		undo.create_action("show")
 		undo.add_do_property(sprite, "visible", true)
 		undo.add_undo_property(sprite, "visible", sprite.visible)
 		undo.commit_action()
-	return self
 
 
-func hide(actor := ""):
+func hide(actor := "") -> void:
 	var sprite = _get_sprite(actor)
 	if sprite:
 		undo.create_action("hide")
 		undo.add_do_property(sprite, "visible", false)
 		undo.add_undo_property(sprite, "visible", sprite.visible)
 		undo.commit_action()
-	return self
 
 
 # trys to find and play the animation in AnimationPlayers first
-func play(target := "", animation := "", wait := false):
+func play(target := "", animation := "", wait := false) -> void:
 	if !animation:
-		return self
+		return
 	var player = _get_player(target)# get animation player
 	if !player or not player.has_animation(animation):
 		player = _get_sprite(target) # get sprite if the animation player does not exist or does not have the animation
@@ -161,34 +155,34 @@ func play(target := "", animation := "", wait := false):
 
 		if wait:
 			yield(player, "animation_finished")
-	return self
 
 
-func behind(actor := "", target_actor := ""):
+func behind(actor := "", target_actor := "") -> void:
 	var target = _get_sprite(target_actor)
-	return at(actor, target.z_index - 1)
+	at(actor, target.z_index - 1)
 
 
 
-func front(actor := "", target_actor := ""):
+func front(actor := "", target_actor := "") -> void:
 	var target = _get_sprite(target_actor)
-	return at(actor, target.z_index - 1)
+	at(actor, target.z_index - 1)
 
 
-func at(actor := "", layer := 0):
+func at(actor := "", layer := 0) -> void:
 	layer = clamp(layer, -4096, 4096)
 	var sprite = _get_sprite(actor)
-	undo.create_action("set_layer")
-	undo.add_do_property(sprite, "z_index", layer)
-	undo.add_undo_property(sprite, "z_index", sprite.z_index)
-	undo.commit_action()
-	return self
+	if sprite:
+		undo.create_action("set_layer")
+		undo.add_do_property(sprite, "z_index", layer)
+		undo.add_undo_property(sprite, "z_index", sprite.z_index)
+		undo.commit_action()
 
 
-func move(actor := "", position_id := "", transform = null, transition := -1, easing := 0, time := 1.0, wait := false):
+func move(actor := "", position_id := "", transform = null, transition := -1, easing := 0, time := 1.0, wait := false) -> void:
 	# transition is a Tween.TransitionType
 	var sprite = _get_sprite(actor)
-
+	if !sprite:
+		return
 	var target_node: Node2D = _get_position(position_id)
 	var from_node: Node2D = sprite.get_parent()
 	var from = sprite.global_transform
@@ -214,7 +208,6 @@ func move(actor := "", position_id := "", transform = null, transition := -1, ea
 		tween.play()
 		if wait and tween.is_running():
 			yield(tween, "finished")
-	return self
 
 
 

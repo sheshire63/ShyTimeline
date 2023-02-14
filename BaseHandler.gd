@@ -109,28 +109,25 @@ func skip() -> void:
 
 # functions for expressions ----------------------------------------------------------------
 
-func set_actor(actor_id := ""):
+func set_actor(actor_id := "") -> void:
 	var actor = _get_actor(actor_id)
 	undo.create_action("set_actor")
 	undo.add_do_method(self, "_set_actor", actor)
 	undo.add_undo_method(self, "_set_actor", active_actor)
 	undo.commit_action()
-	return self
 
 
-func set_control(control := ""):
+func set_control(control := "") -> void:
 	undo.create_action("set_control")
 
 	undo.add_do_method(self, "_set_control", control)
 	undo.add_undo_method(self, "_set_control", active_control)
 
 	undo.commit_action()
-	return self
 
 
 
 # private ----------------------------------------------------------------
-
 
 func _clear_box(box: Container) -> void:
 	for child in box.get_children():

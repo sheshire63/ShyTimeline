@@ -190,7 +190,7 @@ func parse(re_match: RegExMatch) -> void:
 
 
 static func get_regex() -> String:
-	return "^(?<function>show|hide|behind|front|at|transform|play|move)\\(\\s*['\"](?<actor>\\w*)['\"]\\s*(?:,\\s*(?<args>(?:[^\\.{}]|\\\\\\.)+))?\\s*\\)\\s*(?<next>\\.\\s*\\g'1'\\(\\s*['\"]\\2['\"]\\s*(?:,\\s*(?:[^\\.]|\\\\\\.)+)?\\s*\\)\\g'next'?)?\\.?$"
+	return "^(?<function>show|hide|behind|front|at|transform|play|move)\\(\\s*['\"](?<actor>\\w*)['\"]\\s*(?:,\\s*(?<args>(?:[^;{}]|\\\\;)+))?\\s*\\)\\s*(?<next>;\\s*\\g'1'\\(\\s*['\"]\\2['\"]\\s*(?:,\\s*(?:[^;]|\\\\;)+)?\\s*\\)\\g'next'?)?;?$"
 
 
 func _on_TransformCheckBox_toggled(button_pressed: bool) -> void:
@@ -229,21 +229,21 @@ func get_code() -> String:
 
 	match show.selected:
 		1:#hide
-			line += 'hide("%s").' % [actor_id.c_escape()]
+			line += 'hide("%s");' % [actor_id.c_escape()]
 		2:#show
-			line += 'show("%s").' % [actor_id.c_escape()]
+			line += 'show("%s");' % [actor_id.c_escape()]
 
 	if use_animation.pressed:
-		line += 'play("%s", "%s", %s).' % [actor_id.c_escape(), timeline.actors[actor_id].sprite.get_animation_list()[animation.selected].c_escape(), str(animation_wait.pressed)]
+		line += 'play("%s", "%s", %s);' % [actor_id.c_escape(), timeline.actors[actor_id].sprite.get_animation_list()[animation.selected].c_escape(), str(animation_wait.pressed)]
 
 	if use_layer.pressed:
 		match layer_mode.selected:
 			0:#Front
-				line += 'front("%s", "%s").' % [actor_id.c_escape(), layer_line.text.c_escape()]
+				line += 'front("%s", "%s");' % [actor_id.c_escape(), layer_line.text.c_escape()]
 			1:#behind
-				line += 'behind("%s", "%s").' % [actor_id.c_escape(), layer_line.text.c_escape()]
+				line += 'behind("%s", "%s");' % [actor_id.c_escape(), layer_line.text.c_escape()]
 			2:#layer
-				line += 'layer("%s", "%d").' % [actor_id.c_escape(), layer_index.value]
+				line += 'layer("%s", "%d");' % [actor_id.c_escape(), layer_index.value]
 
 	if use_transform.pressed:
 		var transform := ""
@@ -260,7 +260,7 @@ func get_code() -> String:
 					basis_y_x.value, basis_y_y.value,
 					origin_x.value, origin_y.value
 				]
-		line += 'move("%s", "%s", %s, %d, %d, %f, %s).' % [
+		line += 'move("%s", "%s", %s, %d, %d, %f, %s);' % [
 				actor_id.c_escape(),
 				move_id.text.c_escape(),
 				transform if use_transform.pressed else -1,
@@ -269,7 +269,7 @@ func get_code() -> String:
 				transition_time.value,
 				str(transition_wait.pressed).to_lower()
 			]
-	line = line.trim_suffix(".")
+	line = line.trim_suffix(";")
 	return line
 
 

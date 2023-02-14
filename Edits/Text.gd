@@ -14,7 +14,7 @@ func _ready() -> void:
 # override ----------------------------------------------------------------
 
 static func get_regex() -> String:
-	return '(?:set_actor\\(["\'](?<actor>.*)["\']\\)\\.)?text\\((?:["\'](?<text>(?:[^\'"]|\\\\\\.)*)["\'])?\\)'
+	return '(?:set_actor\\(["\'](?<actor>.*)["\']\\);)?text\\((?:["\'](?<text>(?:[^\'"]|\\\\\\.)*)["\'])?\\)'
 
 
 static func get_type() -> String:
@@ -42,7 +42,7 @@ func get_code() -> String:
 	if re_match:
 		line = "text(\"%s\")" % re_match.get_string("text").c_escape()
 		if re_match.get_string("actors"):
-			line = 'set_actor("%s").' % re_match.get_string("actors").c_escape() + line
+			line = 'set_actor("%s");' % re_match.get_string("actors").c_escape() + line
 	else:
 		line = text.text.c_escape()
 	return line
