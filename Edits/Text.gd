@@ -35,16 +35,23 @@ func parse(re_match: RegExMatch) -> void:
 
 func get_code() -> String:
 	var re := RegEx.new()
-	var err = re.compile("^(?:(?<actors>\\w+\\s*(?:,\\s*\\g'actors')*)@)?(?<text>.+)?")
+	var err = re.compile("^(?:(?<actors>\\w+\\s*(?:,\\s*\\g'actors')*)@|(?<actors>\\t))?(?<text>.+)?")
 	assert(err == OK)
-	var re_match = re.search(text.text)
 	var line := ""
-	if re_match:
-		line = "text(\"%s\")" % re_match.get_string("text").c_escape()
-		if re_match.get_string("actors"):
-			line = 'set_actor("%s");' % re_match.get_string("actors").c_escape() + line
-	else:
-		line = text.text.c_escape()
+	for i in text.get_line_count():
+		var re_match = re.search(text.get_line(i) + "\n")
+		if re_match:
+			var text = "text(\"%s\")" % re_match.get_string("text").c_escape()
+			var actor = re_match.get_string("actors")
+			if actor:
+				if actor != "\t":
+					line += 'set_actor("%s");' % actor.c_escape()
+			else:
+				line += 'set_actor("");' % actor.c_escape()
+			line += text
+
+		else:
+			line = text.get_line(i).c_escape()
 	return line
 
 

@@ -18,6 +18,7 @@ margin_left = 16.0
 margin_top = 40.0
 margin_right = -16.0
 margin_bottom = -40.0
+hint_tooltip = "add the name of an actor followed by an \"@\" at the begining of a line to set an actor. the actor is reset at the next unintended line."
 highlight_current_line = true
 syntax_highlighting = true
 show_line_numbers = true

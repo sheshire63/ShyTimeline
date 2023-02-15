@@ -23,7 +23,6 @@ func _init() -> void:
 	assert(err == OK)
 
 
-
 func handle(line: String, vars := {}, inst = null) -> void:
 	is_running = true
 	variables = vars
@@ -91,7 +90,7 @@ func _inner_handle(string: String):
 
 
 func _handle_value(value: Dictionary):
-	var result = _inner_handle(value.value) if value.has("value") else ""
+	var result = _inner_handle(value.value.c_unescape()) if value.has("value") else ""
 	if value.has("next"):
 		var next = _inner_handle(value.next)#todo rework this we might want it to be a list of actions -> how to seperate entries -> stringArray
 		if next and instance.has_method("queue_event"):

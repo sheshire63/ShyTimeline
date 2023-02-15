@@ -10,6 +10,7 @@ export var cps := 5.0
 export var auto := false
 export(float, 0.5, 2.0) var auto_wait_factor := 1.0
 export var auto_hide := false
+export var images := {}
 
 var choice_timer := Timer.new()
 
@@ -162,7 +163,6 @@ func behind(actor := "", target_actor := "") -> void:
 	at(actor, target.z_index - 1)
 
 
-
 func front(actor := "", target_actor := "") -> void:
 	var target = _get_sprite(target_actor)
 	at(actor, target.z_index - 1)
@@ -209,6 +209,16 @@ func move(actor := "", position_id := "", transform = null, transition := -1, ea
 		if wait and tween.is_running():
 			yield(tween, "finished")
 
+
+
+func image(file: String) -> void:
+	var image: Image
+	if file.is_abs_path() or file.is_rel_path():
+		image = load(file)
+	else:
+		file = images.get(file)
+	if image:
+		pass
 
 
 # private functions ------------------------------------------------
