@@ -33,11 +33,12 @@ func _input(event):
 				get_tree().set_input_as_handled()
 			KEY_TAB:
 				if !is_trying_completing and not Input.is_key_pressed(KEY_CONTROL):
-					if Input.is_key_pressed(KEY_SHIFT):
-						find_prev_valid_focus().grab_focus()
-					else:
-						find_next_valid_focus().grab_focus()
-					get_tree().set_input_as_handled()
+					if cursor_get_column() > 0:
+						if Input.is_key_pressed(KEY_SHIFT):
+							find_prev_valid_focus().grab_focus()
+						else:
+							find_next_valid_focus().grab_focus()
+						get_tree().set_input_as_handled()
 			KEY_UP:
 				if is_trying_completing:
 					hover_index -= 1

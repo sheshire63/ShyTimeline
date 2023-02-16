@@ -15,6 +15,7 @@ export var hide_controls := false
 
 export(Resource) var timeline = Timeline.new()
 export var start := "start"
+export var default_theme: Theme
 
 
 var text_boxes := {}
@@ -41,7 +42,11 @@ var theme = Theme.new()
 
 
 func _ready() -> void:
-	theme.copy_default_theme()
+	if default_theme:
+		theme.merge_with(default_theme)
+	else:
+		default_theme = theme.duplicate()
+	
 	text_boxes = _load_nodes_into_dict(text_boxes_paths, RichTextLabel)
 	labels = _load_nodes_into_dict(labels_paths, Label)
 	choice_boxes = _load_nodes_into_dict(choice_boxes_paths, Container)
@@ -236,10 +241,14 @@ func _get_actor(id:String) -> Actor:
 	return timeline.actors.get(id)
 
 
-func _set_actor(actor: Actor) -> void:
+func _set_actor(actor: Actor = null) -> void:
 	active_actor = actor
-	if actor and actor.theme:
-		theme.merge_with(actor.theme)
+	if actor:
+		if actor.theme:
+			theme.merge_with(actor.theme)
+	else:
+		theme = default_theme.duplicate()
+	
 	var label = _get_label()
 	label.text = actor.name if actor else ""
 	label.visible = true
