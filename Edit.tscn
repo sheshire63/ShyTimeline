@@ -3,7 +3,6 @@
 [ext_resource path="res://addons/ShyTimeline/Edits.gd" type="Script" id=1]
 
 [node name="Edit" type="Control"]
-visible = false
 margin_left = 518.0
 margin_right = 1024.0
 margin_bottom = 560.0
@@ -48,7 +47,7 @@ custom_constants/separation = 8
 [node name="AddMenu" type="PopupMenu" parent="."]
 margin_right = 20.0
 margin_bottom = 20.0
-items = [ "Choice", null, 0, false, false, 0, 0, null, "", false, "Text", null, 0, false, false, 1, 0, null, "", false, "Code", null, 0, false, false, 2, 0, null, "", false, "Input", null, 0, false, false, 3, 0, null, "", false ]
+items = [ "Sprite", null, 0, false, false, 0, 0, null, "", false, "Choice", null, 0, false, false, 1, 0, null, "", false, "Text", null, 0, false, false, 2, 0, null, "", false, "Code", null, 0, false, false, 3, 0, null, "", false, "Input", null, 0, false, false, 4, 0, null, "", false ]
 
 [connection signal="pressed" from="Toolbar/Add" to="." method="_on_Add_pressed"]
 [connection signal="text_entered" from="NameLine" to="." method="_on_NameLine_text_entered"]

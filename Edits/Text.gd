@@ -6,7 +6,7 @@ onready var text := $TextEdit
 
 func _ready() -> void:
 	text.text = get_data().get("text", "")
-
+	_update_size()
 	if timeline:
 		text.completion_list = timeline.actors.keys()
 
